@@ -66,21 +66,10 @@ public class Borrow extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				
-				String query;
-				PreparedStatement pst;
-				ResultSet rs;
 				try {
-					Borrow frame = new Borrow();
+					Borrow frame = new Borrow(0L);  // Pass a default value for demonstration
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
-					
-					query = "select ISBN, Title, Author, Genre from Book where Status='Available'";
-					pst = conn.prepareStatement(query);
-					rs = pst.executeQuery();
-					tableBookList.setModel(DbUtils.resultSetToTableModel(rs));
-	
-					pst.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -151,7 +140,7 @@ public class Borrow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Borrow() {
+	public Borrow(Long userid) {
 		conn = SqliteConnect.connect();
 		setResizable(false);
 		setTitle("Library System");
@@ -168,11 +157,34 @@ public class Borrow extends JFrame {
 		lblBorrow.setFont(new Font("Verdana", Font.PLAIN, 17));
 		contentPane.add(lblBorrow);
 		
-		JLabel lblUserLabel = new JLabel("Hi, Lindaa");
+		// Show user's name
+		String name = null;
+		try {
+			String query = "select * from User where ID_User = ?";
+			PreparedStatement pst = conn.prepareStatement(query);
+			pst.setLong(1, userid);
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				name = rs.getString("Name");
+			}	
+			pst.close();							
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		JLabel lblUserLabel = new JLabel("Hi, ");
 		lblUserLabel.setForeground(new Color(255, 255, 255));
-		lblUserLabel.setBounds(287, 51, 77, 14);
+		lblUserLabel.setBounds(287, 51, 30, 14);
 		lblUserLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		contentPane.add(lblUserLabel);
+		
+		JLabel lblName = new JLabel("");
+		lblName.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblName.setForeground(new Color(255, 255, 255));
+		lblName.setText(name);
+		lblName.setBounds(315, 51, 93, 14);
+		contentPane.add(lblName);
 		
 		JLabel lblISBNLabel = new JLabel("ISBN");
 		lblISBNLabel.setForeground(new Color(255, 255, 255));
@@ -303,6 +315,17 @@ public class Borrow extends JFrame {
 			}
 		));
 		
+		// Show all available books into the table
+		try {
+			String query = "select ISBN, Title, Author, Genre from Book where Status='Available'";
+			PreparedStatement pst = conn.prepareStatement(query);
+			ResultSet rs = pst.executeQuery();
+			tableBookList.setModel(DbUtils.resultSetToTableModel(rs));
+			pst.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		tableBookList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -408,7 +431,7 @@ public class Borrow extends JFrame {
 							query = "insert into \"Transaction\" (ID, ID_User, ISBN, BorrowDate, ExpectedReturn) values (?, ?, ?, ?, ?)";
 							pst = conn.prepareStatement(query);
 							pst.setLong(1, ran_id);
-							pst.setString(2, "2020");
+							pst.setLong(2, userid);
 							pst.setString(3, ISBNtextField.getText());
 							pst.setString(4, dateFormat.format(new Date()));
 							pst.setString(5, dateFormat.format(dateChooser.getDate()));		
@@ -431,6 +454,35 @@ public class Borrow extends JFrame {
 		contentPane.add(btnBorrowButton);
 		
 		JButton btnReturnButton = new JButton("BACK TO MAIN MENU");
+		btnReturnButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String query = "select * from User where ID_User=?";
+					PreparedStatement pst = conn.prepareStatement(query);
+					pst.setLong(1, userid);
+					ResultSet rs=pst.executeQuery();
+					while(rs.next()) {
+						String type = rs.getString("Type");
+						if (type.equals("Faculty")) {
+								AdminMenu adm = new AdminMenu(userid);
+								adm.setVisible(true);
+								adm.setLocationRelativeTo(null);
+								dispose(); 
+								
+							} else if (type.equals("Student")) {
+								UserMenu userm = new UserMenu(userid);
+								userm.setVisible(true);
+								userm.setLocationRelativeTo(null);
+								dispose(); 
+							}
+					}
+					rs.close();
+					pst.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		btnReturnButton.setBounds(473, 439, 173, 23);
 		contentPane.add(btnReturnButton);
 		

@@ -18,7 +18,7 @@ public class ReturnBook extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ReturnBook frame = new ReturnBook();
+					ReturnBook frame = new ReturnBook(0L);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -30,7 +30,7 @@ public class ReturnBook extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ReturnBook() {
+	public ReturnBook(Long userid) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

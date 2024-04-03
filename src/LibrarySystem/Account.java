@@ -26,7 +26,8 @@ public class Account extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private static Connection conn = null;
-	
+
+
 	private JPanel contentPane;
 	private JPanel panelLogin;
 	private JPanel panelRegister;
@@ -36,6 +37,7 @@ public class Account extends JFrame {
 	private JTextField RegisterEmailField;
 	private JPasswordField RegisterPasswordField;
 	private JTextField RegisterNameField;
+
 		
 	/**
 	 * Launch the application.
@@ -60,7 +62,7 @@ public class Account extends JFrame {
 		layeredPane.repaint();
 		layeredPane.revalidate();
 	}
-
+	
 	/**
 	 * Create the frame.
 	 */
@@ -72,7 +74,6 @@ public class Account extends JFrame {
 		setBounds(0, 0, 611, 573);
 		
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(0, 0, 160));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -96,7 +97,6 @@ public class Account extends JFrame {
 		panel.setLayout(null);
 		
 		JLabel EmailLabel = new JLabel("Email");
-		EmailLabel.setForeground(new Color(255, 255, 255));
 		EmailLabel.setBounds(24, 181, 46, 14);
 		panel.add(EmailLabel);
 		
@@ -106,7 +106,6 @@ public class Account extends JFrame {
 		LoginEmailField.setColumns(10);
 		
 		JLabel PasswordLabel = new JLabel("Password");
-		PasswordLabel.setForeground(new Color(255, 255, 255));
 		PasswordLabel.setBounds(24, 218, 66, 14);
 		panel.add(PasswordLabel);
 		
@@ -125,12 +124,28 @@ public class Account extends JFrame {
 					pst.setString(2, LoginPasswordField.getText());
 					ResultSet rs=pst.executeQuery();
 					int count =0;
+					String type = null; 
+					long ID_User = 0;
 					while(rs.next()) {
+						type = rs.getString("Type");
+						ID_User = rs.getLong("ID_User");
 						count=count+1;
 					}
 					if(count ==1)
 					{
-						JOptionPane.showMessageDialog(null, "Login successfully.", "LOGIN", JOptionPane.INFORMATION_MESSAGE);				
+						JOptionPane.showMessageDialog(null, "      Login successfully.", "LOGIN", JOptionPane.INFORMATION_MESSAGE);	
+						if (type.equals("Faculty")) {
+								AdminMenu adm = new AdminMenu(ID_User);
+								adm.setVisible(true);
+								adm.setLocationRelativeTo(null);
+								dispose(); 
+								
+							} else if (type.equals("Student")) {
+								UserMenu userm = new UserMenu(ID_User);
+								userm.setVisible(true);
+								userm.setLocationRelativeTo(null);
+								dispose(); 
+							}
 					}
 					else if (count < 1) {
 						JOptionPane.showMessageDialog(null, "Email or Password is not correct. Try Again.", "LOGIN", JOptionPane.INFORMATION_MESSAGE);				
@@ -146,7 +161,6 @@ public class Account extends JFrame {
 		panel.add(LoginButton);
 		
 		JLabel lblNewLabel_2 = new JLabel("If you don't have an account");
-		lblNewLabel_2.setForeground(new Color(255, 255, 255));
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblNewLabel_2.setBounds(10, 411, 170, 14);
 		panel.add(lblNewLabel_2);
@@ -171,11 +185,10 @@ public class Account extends JFrame {
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setBounds(0, 0, 396, 534);
 		lblNewLabel.setIcon(new ImageIcon(Account.class.getResource("/Image/blue.jpg")));
-		panel.add(lblNewLabel);		
+		panelLogin.add(lblNewLabel);		
 		
 		// Register screen
 		panelRegister = new JPanel();
-		panelRegister.setBackground(new Color(0, 0, 160));
 		panelRegister.setBounds(0, 0, 595, 534);
 		layeredPane.add(panelRegister);
 		panelRegister.setLayout(null);
@@ -240,7 +253,7 @@ public class Account extends JFrame {
 						RegisterPasswordField.setText("");
 					}
 					else {				
-						query = "insert into User (ID, Name, Email, Password, Type) values (?, ?, ?, ?, ?)";
+						query = "insert into User (ID_User, Name, Email, Password, Type) values (?, ?, ?, ?, ?)";
 						pst = conn.prepareStatement(query);
 						pst.setLong(1, ran_id);
 						pst.setString(2, RegisterNameField.getText());
@@ -249,6 +262,10 @@ public class Account extends JFrame {
 						pst.setString(5, "Student");
 						pst.execute();
 						JOptionPane.showMessageDialog(null, "New account is created successfully.", "LOGIN", JOptionPane.INFORMATION_MESSAGE);		
+						UserMenu userm = new UserMenu(ran_id);
+						userm.setVisible(true);
+						userm.setLocationRelativeTo(null);
+						dispose(); 
 					}
 					rs.close();
 					pst.close();
@@ -272,17 +289,15 @@ public class Account extends JFrame {
 		
 		JLabel lblsignup = new JLabel("Good To See You!");
 		lblsignup.setFont(new Font("Verdana", Font.PLAIN, 23));
-		lblsignup.setForeground(new Color(255, 255, 255));
 		lblsignup.setBounds(10, 89, 222, 53);
 		panelRegister.add(lblsignup);
 		
 		JLabel lblRsubtext = new JLabel("Please sign up an account");
 		lblRsubtext.setFont(new Font("Rockwell", Font.PLAIN, 12));
-		lblRsubtext.setForeground(new Color(255, 255, 255));
 		lblRsubtext.setBounds(60, 141, 160, 26);
 		panelRegister.add(lblRsubtext);
 		
-		// Set Login background
+		// Set Register background
 		JLabel lblImageLabel = new JLabel("");
 		lblImageLabel.setBounds(0, 0, 396, 534);
 		lblImageLabel.setIcon(new ImageIcon(Account.class.getResource("/Image/blue.jpg")));

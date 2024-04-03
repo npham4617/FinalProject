@@ -45,6 +45,7 @@ public class Library extends JFrame {
 	private JTextField textGenre;
 	private JTextField textStatus;
 	private JTextField textSearchField;
+
 	
 	/**
 	 * Launch the application.
@@ -54,7 +55,7 @@ public class Library extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Library frame = new Library();
+					Library frame = new Library(0L); // Pass a default value for demonstration
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 					
@@ -102,7 +103,7 @@ public class Library extends JFrame {
 		}
 	}
 	
-	public Library() {
+	public Library(Long userid) {
 		setResizable(false);
 		setTitle("Library System");
 		setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -223,6 +224,14 @@ public class Library extends JFrame {
 		contentPane.add(btnDelete);
 		
 		JButton btnNewButton = new JButton("BACK TO MAIN MENU");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminMenu adm = new AdminMenu(userid);
+				adm.setVisible(true);
+				adm.setLocationRelativeTo(null);
+				dispose(); 
+			}
+		});
 		btnNewButton.setBackground(new Color(255, 255, 255));
 		btnNewButton.setBounds(395, 285, 154, 23);
 		contentPane.add(btnNewButton);
@@ -238,10 +247,33 @@ public class Library extends JFrame {
 		lblTitleWindowLabel.setBounds(204, 11, 207, 49);
 		contentPane.add(lblTitleWindowLabel);
 		
-		JLabel lblWelcome = new JLabel("Hi, Lidaaaaaaaaaa");
+		JLabel lblWelcome = new JLabel("Hi, ");
 		lblWelcome.setForeground(new Color(255, 255, 255));
-		lblWelcome.setBounds(244, 65, 127, 23);
+		lblWelcome.setBounds(243, 65, 127, 23);
 		contentPane.add(lblWelcome);
+		
+		String name = null;
+		try {
+			String query = "select * from User where ID_User = ?";
+			PreparedStatement pst = conn.prepareStatement(query);
+			
+			pst.setLong(1, userid);
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				name = rs.getString("Name");
+			}	
+			pst.close();							
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		JLabel lblName = new JLabel("");
+		lblName.setForeground(new Color(255, 255, 255));
+		lblName.setText(name);
+		lblName.setBounds(265, 65, 93, 23);
+		contentPane.add(lblName);
+		
 
 		JComboBox<String> comboBoxType = new JComboBox<String>();
 		comboBoxType.setBackground(new Color(255, 255, 255));
