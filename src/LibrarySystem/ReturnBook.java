@@ -47,6 +47,7 @@ public class ReturnBook extends JFrame {
 	private JTextField BorrowDateField;
 	private JTextField ExpectedDateField;
 	private JPanel contentPane;
+	private JLabel lblName;
 	
 	/**
 	 * Launch the application.
@@ -85,7 +86,7 @@ public class ReturnBook extends JFrame {
 		text.setForeground(Color.black);
 	}
 		
-	public void refreshTable() {
+	public void refreshTable(Long userid) {
 		String query;
 		PreparedStatement pst;
 		try {
@@ -106,9 +107,10 @@ public class ReturnBook extends JFrame {
 					+ "from `Transaction`\r\n"
 					+ "join User on `Transaction`.ID_User = User.ID_User\r\n"
 					+ "join Book on `Transaction`.ISBN = Book.ISBN\r\n"
-					+ "where `Transaction`.ID_User = userid\r\n"
+					+ "where `Transaction`.ID_User = ? \r\n"
 					+ "order by Book.ISBN asc";
 			pst = conn.prepareStatement(query);
+			pst.setLong(1, userid);
 			ResultSet rs = pst.executeQuery();
 			tableBookHistory.setModel(DbUtils.resultSetToTableModel(rs));
 			pst.close();		
@@ -119,13 +121,14 @@ public class ReturnBook extends JFrame {
 		
 	public ReturnBook(Long userid) {
 		conn = SqliteConnect.connect();
+		
+		setTitle("Library System");
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 672, 459);
-		setResizable(false);
-		setTitle("Library System");
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
@@ -138,7 +141,7 @@ public class ReturnBook extends JFrame {
 		// Show user's name
 		String name = null;
 		try {
-			String query = "select * from User where ID_User = ?";
+			String query = "select * from User where ID_User = ? ";
 			PreparedStatement pst = conn.prepareStatement(query);
 			pst.setLong(1, userid);
 			ResultSet rs = pst.executeQuery();
@@ -157,11 +160,11 @@ public class ReturnBook extends JFrame {
 		lblUserLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		contentPane.add(lblUserLabel);
 		
-		JLabel lblName = new JLabel("");
-		lblUserLabel.setForeground(new Color(255, 255, 255));
+		lblName = new JLabel(" ");
 		lblName.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblName.setForeground(new Color(255, 255, 255));
 		lblName.setText(name);
-		lblName.setBounds(409, 21, 0, 0);
+		lblName.setBounds(288, 43, 93, 14);
 		contentPane.add(lblName);
 		
 		SearchField = new JTextField();
@@ -200,9 +203,11 @@ public class ReturnBook extends JFrame {
 							+ "from `Transaction`\r\n"
 							+ "join User on `Transaction`.ID_User = User.ID_User\r\n"
 							+ "join Book on `Transaction`.ISBN = Book.ISBN\r\n"
-							+ "where `Transaction`.ID_User = userid) AS subquery\r\n"
-							+ "where subquery.ISBN = '"+SearchField.getText()+"'";
+							+ "where `Transaction`.ID_User = ? ) AS subquery\r\n"
+							+ "where subquery.ISBN = ? ";
 					PreparedStatement pst = conn.prepareStatement(query);
+					pst.setLong(1, userid);
+					pst.setString(1, SearchField.getText());
 					ResultSet rs = pst.executeQuery();					
 					while (rs.next()) {
 						count=count+1;
@@ -253,9 +258,10 @@ public class ReturnBook extends JFrame {
 					+ "from `Transaction`\r\n"
 					+ "join User on `Transaction`.ID_User = User.ID_User\r\n"
 					+ "join Book on `Transaction`.ISBN = Book.ISBN\r\n"
-					+ "where `Transaction`.ID_User = userid \r\n"
+					+ "where `Transaction`.ID_User = ? \r\n"
 					+ "order by Book.ISBN asc";
 				PreparedStatement pst = conn.prepareStatement(query);
+				pst.setLong(1, userid);
 				ResultSet rs = pst.executeQuery();
 				tableBookHistory.setModel(DbUtils.resultSetToTableModel(rs));
 				pst.close();
@@ -269,8 +275,8 @@ public class ReturnBook extends JFrame {
 				try {
 					int row = tableBookHistory.getSelectedRow();
 					String id = (tableBookHistory.getModel().getValueAt(row, 0).toString());
-					String query = "select * from `Transaction`"
-							+ "join Book on `Transaction`.ISBN = Book.ISBN\r\n"
+					String query = "select * from `Transaction` \r\n"
+							+ "join Book on `Transaction`.ISBN = Book.ISBN \r\n"
 							+ "where Book.ISBN='"+id+"'";
 					PreparedStatement pst = conn.prepareStatement(query);
 					ResultSet rs = pst.executeQuery();
@@ -395,7 +401,7 @@ public class ReturnBook extends JFrame {
 						}
 						
 					pst.close();
-					refreshTable();
+					refreshTable(userid);
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "The book is not existed or has never been borrowed by the user.", "RETURN", JOptionPane.INFORMATION_MESSAGE);	
@@ -412,7 +418,7 @@ public class ReturnBook extends JFrame {
 		btnBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String query = "select * from User where ID_User=?";
+					String query = "select * from User where ID_User= ? ";
 					PreparedStatement pst = conn.prepareStatement(query);
 					pst.setLong(1, userid);
 					ResultSet rs=pst.executeQuery();

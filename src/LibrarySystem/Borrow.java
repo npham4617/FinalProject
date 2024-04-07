@@ -60,6 +60,7 @@ public class Borrow extends JFrame {
 	private static JTable tableFeedback;
 	private static JTextArea textArea;
 	private static JScrollPane scrollPane_feedback;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -153,7 +154,7 @@ public class Borrow extends JFrame {
 		
 		JLabel lblBorrow = new JLabel("BORROW BOOK");
 		lblBorrow.setForeground(new Color(255, 255, 255));
-		lblBorrow.setBounds(256, 11, 154, 29);
+		lblBorrow.setBounds(272, 11, 154, 29);
 		lblBorrow.setFont(new Font("Verdana", Font.PLAIN, 17));
 		contentPane.add(lblBorrow);
 		
@@ -183,7 +184,7 @@ public class Borrow extends JFrame {
 		lblName.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblName.setForeground(new Color(255, 255, 255));
 		lblName.setText(name);
-		lblName.setBounds(315, 51, 93, 14);
+		lblName.setBounds(311, 51, 93, 14);
 		contentPane.add(lblName);
 		
 		JLabel lblISBNLabel = new JLabel("ISBN");

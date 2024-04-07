@@ -258,6 +258,7 @@ public class Library extends JFrame {
 		lblWelcome.setBounds(243, 65, 127, 23);
 		contentPane.add(lblWelcome);
 		
+		// Show user's name
 		String name = null;
 		try {
 			String query = "select * from User where ID_User = ?";

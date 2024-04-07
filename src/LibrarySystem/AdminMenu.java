@@ -71,11 +71,11 @@ public class AdminMenu extends JFrame {
 			ResultSet rs = pst.executeQuery();
 					
 			while(rs.next()) {
-						name = rs.getString("Name");
+				name = rs.getString("Name");
 			}	
 			pst.close();							
 		} catch (Exception e) {
-					e.printStackTrace();
+				e.printStackTrace();
 		}
 				
 		lblName = new JLabel("");
@@ -117,12 +117,13 @@ public class AdminMenu extends JFrame {
 		JButton btnReturnButton = new JButton("RETURN BOOK");
 		btnReturnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ReturnBook re = new ReturnBook(userid);
-				re.setVisible(true);
-				re.setLocationRelativeTo(null);
+				ReturnBook rb = new ReturnBook(userid);
+				rb.setVisible(true);
+				rb.setLocationRelativeTo(null);
 				dispose(); 
 			}
 		});
+		
 		btnReturnButton.setBounds(20, 203, 131, 23);
 		contentPane.add(btnReturnButton);
 		
