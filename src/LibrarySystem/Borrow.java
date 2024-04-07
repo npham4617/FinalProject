@@ -493,8 +493,5 @@ public class Borrow extends JFrame {
 		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/blue.jpg")));
 		contentPane.add(lblImageLabel);
 
-		
-		
-		
 	}
 }

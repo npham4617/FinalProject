@@ -58,12 +58,7 @@ public class Library extends JFrame {
 					Library frame = new Library(0L); // Pass a default value for demonstration
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
-					
-					String query = "select ISBN, Title, Author, Genre, Status from Book";
-					PreparedStatement pst = conn.prepareStatement(query);
-					ResultSet rs = pst.executeQuery();
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-					pst.close();							
+											
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -133,6 +128,17 @@ public class Library extends JFrame {
 				"ISBN", "Title", "Author", "Genre", "Status"
 			}
 		));
+		
+		// Show all books in the Library into the Table
+		try {		
+			String query = "select ISBN, Title, Author, Genre, Status from Book";
+			PreparedStatement pst = conn.prepareStatement(query);
+			ResultSet rs = pst.executeQuery();
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+			pst.close();							
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		JRadioButton rdbtnAllButton = new JRadioButton("All Books");
 		rdbtnAllButton.setOpaque(false);
