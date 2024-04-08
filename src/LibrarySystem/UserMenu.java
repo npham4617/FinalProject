@@ -98,9 +98,9 @@ public class UserMenu extends JFrame {
 		JButton btnReturnButton = new JButton("RETURN BOOK");
 		btnReturnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ReturnBook re = new ReturnBook(userid);
-				re.setVisible(true);
-				re.setLocationRelativeTo(null);
+				ReturnBook rb = new ReturnBook(userid);
+				rb.setVisible(true);
+				rb.setLocationRelativeTo(null);
 				dispose();
 			}
 		});
@@ -113,6 +113,14 @@ public class UserMenu extends JFrame {
 	
 		
 		JButton btnDiscussButton = new JButton("DISCUSSION");
+		btnDiscussButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Discussion dis = new Discussion(userid);
+				dis.setVisible(true);
+				dis.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
 		btnDiscussButton.setBounds(20, 263, 131, 23);
 		contentPane.add(btnDiscussButton);
 

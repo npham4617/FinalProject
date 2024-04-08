@@ -170,7 +170,7 @@ public class Account extends JFrame {
 		panel.add(btnCreateAccount);
 		
 		JLabel lblWelcome = new JLabel("Welcome Back!");
-		lblWelcome.setFont(new Font("Verdana", Font.PLAIN, 25));
+		lblWelcome.setFont(new Font("Rockwell", Font.PLAIN, 25));
 		lblWelcome.setForeground(new Color(255, 255, 255));
 		lblWelcome.setBounds(10, 89, 199, 53);
 		panelLogin.add(lblWelcome);
@@ -288,7 +288,7 @@ public class Account extends JFrame {
 		panel1.add(RegisterLoginButton);
 		
 		JLabel lblsignup = new JLabel("Good To See You!");
-		lblsignup.setFont(new Font("Verdana", Font.PLAIN, 23));
+		lblsignup.setFont(new Font("Rockwell", Font.PLAIN, 25));
 		lblsignup.setBounds(10, 89, 222, 53);
 		panelRegister.add(lblsignup);
 		

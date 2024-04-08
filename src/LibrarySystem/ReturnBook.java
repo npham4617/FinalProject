@@ -125,18 +125,18 @@ public class ReturnBook extends JFrame {
 		setTitle("Library System");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(0, 0, 672, 459);
+		setBounds(0, 0, 672, 429);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblBorrow = new JLabel("RETURN BOOK");
-		lblBorrow.setForeground(new Color(255, 255, 255));
-		lblBorrow.setBounds(246, 10, 135, 22);
-		lblBorrow.setFont(new Font("Verdana", Font.PLAIN, 17));
-		contentPane.add(lblBorrow);
+		JLabel lblReturn = new JLabel("RETURN BOOK");
+		lblReturn.setForeground(new Color(255, 255, 255));
+		lblReturn.setBounds(246, 10, 210, 22);
+		lblReturn.setFont(new Font("Rockwell", Font.PLAIN, 25));
+		contentPane.add(lblReturn);
 		
 		// Show user's name
 		String name = null;
@@ -411,7 +411,7 @@ public class ReturnBook extends JFrame {
 				}
 			}
 		});
-		btnReturnButton.setBounds(221, 367, 89, 23);
+		btnReturnButton.setBounds(243, 344, 89, 23);
 		contentPane.add(btnReturnButton);
 		
 		JButton btnBackButton = new JButton("MAIN MENU");
@@ -444,7 +444,7 @@ public class ReturnBook extends JFrame {
 				}
 			}
 		});
-		btnBackButton.setBounds(324, 367, 110, 23);
+		btnBackButton.setBounds(346, 344, 110, 23);
 		contentPane.add(btnBackButton);
 
 		

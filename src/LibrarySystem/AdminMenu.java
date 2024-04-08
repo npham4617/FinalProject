@@ -26,6 +26,7 @@ public class AdminMenu extends JFrame {
 
 	private static Connection conn = null;
 
+
 	/**
 	 * Launch the application.
 	 */
@@ -85,7 +86,7 @@ public class AdminMenu extends JFrame {
 		
 		JLabel lblTitleWindowLabel = new JLabel("WELCOME TO LIBRARY SYSTEM");
 		lblTitleWindowLabel.setFont(new Font("Rockwell", Font.PLAIN, 25));
-		lblTitleWindowLabel.setBounds(110, 10, 375, 30);
+		lblTitleWindowLabel.setBounds(115, 10, 429, 30);
 		contentPane.add(lblTitleWindowLabel);
 
 		JButton btnBookButton = new JButton("MANAGE BOOK");
@@ -134,9 +135,16 @@ public class AdminMenu extends JFrame {
 	
 		
 		JButton btnDiscussButton = new JButton("DISCUSSION");
+		btnDiscussButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Discussion dis = new Discussion(userid);
+				dis.setVisible(true);
+				dis.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
 		btnDiscussButton.setBounds(20, 303, 131, 23);
 		contentPane.add(btnDiscussButton);
-		
 		
 		 
 		JButton btnMeetupButton = new JButton("MEETUP");
@@ -147,6 +155,7 @@ public class AdminMenu extends JFrame {
 		// Set Admin page layout
 		JLabel lblImageLabel = new JLabel("");
 		lblImageLabel = new JLabel("");
+		lblImageLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblImageLabel.setBounds(0, 10, 595, 550);
 		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/Library.png")));
 		contentPane.add(lblImageLabel);	

@@ -1,9 +1,7 @@
 package LibrarySystem;
 
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -30,17 +28,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import com.toedter.calendar.JDateChooser;
-import javax.swing.JTextArea;
+
 
 public class Borrow extends JFrame {
 
@@ -57,9 +58,7 @@ public class Borrow extends JFrame {
 	private JTextField TypetextField;
 	
 	private static JTable tableBookList;
-	private static JTable tableFeedback;
-	private static JTextArea textArea;
-	private static JScrollPane scrollPane_feedback;
+	private static JTextPane textPaneFeedback;
 	
 	/**
 	 * Launch the application.
@@ -79,28 +78,60 @@ public class Borrow extends JFrame {
 	}
 	
 	// show feedback
-	public void showFeedback (JTextField text) {
+	public static void fetchDataFromDatabase(String searchtext) {
+		textPaneFeedback.setText(null);
+		
+        StyledDocument doc = textPaneFeedback.getStyledDocument();
+        
+        // Define styles (colors) for each row
+        MutableAttributeSet blueBoldStyle = new SimpleAttributeSet();
+        StyleConstants.setForeground(blueBoldStyle, Color.BLUE);
+        StyleConstants.setBold(blueBoldStyle, true);
+        
+        MutableAttributeSet magentaBoldStyle = new SimpleAttributeSet();
+        StyleConstants.setForeground(magentaBoldStyle, Color.MAGENTA);
+        StyleConstants.setBold(magentaBoldStyle, true);
+        
+        MutableAttributeSet blueStyle = doc.addStyle("blue", null);
+        StyleConstants.setForeground(blueStyle, Color.BLUE);
+        
+        MutableAttributeSet magentaStyle = doc.addStyle("magenta", null);
+        StyleConstants.setForeground(magentaStyle, Color.MAGENTA);
+
 		String query;
 		PreparedStatement pst;
 
 		try {	
-			query = "select User.Name as 'From', Feedback.Feedback from User join Feedback on User.ID_User = Feedback.ID_User where Feedback.ISBN ="+text.getText()+"";
+			query = "select User.Name as 'From', Feedback.Feedback from User join Feedback on User.ID_User = Feedback.ID_User where Feedback.ISBN = ? ";
 			pst = conn.prepareStatement(query);
+			pst.setLong(1, Long.parseLong(searchtext)); 
 			ResultSet rs = pst.executeQuery();
-			tableFeedback.setModel(DbUtils.resultSetToTableModel(rs));
-			textArea.setVisible(false);
-			if (tableFeedback.getModel().getRowCount() == 0) {
-				textArea.setVisible(true);
-				textArea.setText("\n          There is no any feedback for this book.");
-	            textArea.setEditable(false);
-			}
-			pst.close();
-			rs.close();
-
+			if (!rs.isBeforeFirst()) {
+		        doc.insertString(doc.getLength(), "\n         There is no any feedback for this book.", null);
+		    } else {
+				while (rs.next()) {
+					String from = rs.getString("From");
+		            String feedback = rs.getString("Feedback");
+		            // Append data to the JTextPane with the appropriate style            
+	                if (rs.getRow() % 2 == 0) {
+	                	doc.insertString(doc.getLength(), "From: ", blueStyle);
+	                	doc.insertString(doc.getLength(), from + "\n", blueBoldStyle);
+	                    doc.insertString(doc.getLength(), feedback + "\n\n", blueStyle);
+	                } else {
+	                	doc.insertString(doc.getLength(), "From: ", magentaStyle);
+	                	doc.insertString(doc.getLength(), from + "\n", magentaBoldStyle);
+	                    doc.insertString(doc.getLength(), feedback + "\n\n", magentaStyle);
+	                }
+				}
+				pst.close();
+				rs.close();
+		    }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+		
+    }
+	
 	// create a method to add placeholder style
 	public void addPlaceholder (JTextField text) {
 		Font font = text.getFont();
@@ -152,11 +183,11 @@ public class Borrow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblBorrow = new JLabel("BORROW BOOK");
-		lblBorrow.setForeground(new Color(255, 255, 255));
-		lblBorrow.setBounds(272, 11, 154, 29);
-		lblBorrow.setFont(new Font("Verdana", Font.PLAIN, 17));
-		contentPane.add(lblBorrow);
+		JLabel lblTitleWindowLabel = new JLabel("BORROW BOOK");
+		lblTitleWindowLabel.setForeground(new Color(255, 255, 255));
+		lblTitleWindowLabel.setBounds(251, 11, 205, 29);
+		lblTitleWindowLabel.setFont(new Font("Rockwell", Font.PLAIN, 25));
+		contentPane.add(lblTitleWindowLabel);
 		
 		// Show user's name
 		String name = null;
@@ -287,7 +318,7 @@ public class Borrow extends JFrame {
 						StatustextField.setText(rs.getString("Status"));
 						TypetextField.setText(rs.getString("Type"));
 						
-						showFeedback(ISBNtextField);
+						fetchDataFromDatabase(ISBNtextField.getText());
 					}
 					if (count < 1) {
 						JOptionPane.showMessageDialog(null, "Book is not existed", "SEARCH", JOptionPane.INFORMATION_MESSAGE);				
@@ -345,7 +376,7 @@ public class Borrow extends JFrame {
 						StatustextField.setText(rs.getString("Status"));
 						TypetextField.setText(rs.getString("Type"));
 						
-						showFeedback(ISBNtextField);
+						fetchDataFromDatabase(ISBNtextField.getText());
 					}		
 					pst.close();
 				} catch (Exception ex) {
@@ -365,41 +396,14 @@ public class Borrow extends JFrame {
 		contentPane.add(StatustextField);
 		StatustextField.setColumns(10);
 				
-		textArea = new JTextArea(1,1);
-		textArea.setBounds(346, 260, 290, 110);
-		contentPane.add(textArea, BorderLayout.CENTER);
+		JScrollPane scrollPaneFeedback = new JScrollPane();
+		scrollPaneFeedback.setBounds(346, 260, 290, 110);
+		contentPane.add(scrollPaneFeedback);
 		
-		scrollPane_feedback = new JScrollPane();
-		scrollPane_feedback.setBounds(346, 260, 290, 110);
-		contentPane.add(scrollPane_feedback);
-		
-		tableFeedback = new JTable();
-		scrollPane_feedback.setViewportView(tableFeedback);
-		tableFeedback.setModel(new DefaultTableModel(
-				new Object[][] {
-				},
-				new String[] {
-					"From", "Feedback"
-				}
-			));
-  
-		tableFeedback.setRowHeight(tableFeedback.getRowHeight() * 2);
-		tableFeedback.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-			private static final long serialVersionUID = 1L;
+		textPaneFeedback = new JTextPane();
 
-			@Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                // Set background color based on row index
-                
-                if (row % 2 == 0) {
-                    c.setBackground(Color.LIGHT_GRAY);
-                } else {
-                    c.setBackground(Color.WHITE);
-                }
-                return c;
-            }
-        });
+		textPaneFeedback.setEditable(false);
+		scrollPaneFeedback.setViewportView(textPaneFeedback);
 		
 		JDateChooser dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("MM-dd-yyyy");
