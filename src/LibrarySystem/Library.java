@@ -5,11 +5,14 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import net.proteanit.sql.DbUtils;
 import java.sql.*;
+import java.util.regex.Pattern;
 
 import javax.swing.JScrollPane;
 import java.awt.Font;
@@ -45,7 +48,8 @@ public class Library extends JFrame {
 	private JTextField textGenre;
 	private JTextField textStatus;
 	private JTextField textSearchField;
-
+	private static JLabel lblmessagelabel;
+	private static JButton btnSearchButton;
 	
 	/**
 	 * Launch the application.
@@ -290,6 +294,48 @@ public class Library extends JFrame {
 		contentPane.add(comboBoxType);
 		
 		textSearchField = new JTextField();
+		textSearchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkInput();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                checkInput();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Plain text components do not fire these events
+            }
+
+            private void checkInput() {
+                // Get the current text from the searchTextField
+                String text = textSearchField.getText();
+
+                if (text.equals("Enter ISBN here ...")) {
+                	lblmessagelabel.setText(""); // Clear the message label
+                	btnSearchButton.setEnabled(false);
+                    return; // Exit the method
+                }
+
+                // Check if the text is empty
+                if (text.isEmpty()) {
+                	lblmessagelabel.setText(""); // Clear the message label if input is empty
+                	btnSearchButton.setEnabled(false);
+                } else {
+                    // Use regular expression to check if text contains only digits
+                    if (!Pattern.matches("\\d*", text)) {
+                    	lblmessagelabel.setText("Non-numeric input detected!");
+                    	btnSearchButton.setEnabled(false);
+                    } else {
+                    	lblmessagelabel.setText("");
+                    	btnSearchButton.setEnabled(true);
+                    }
+                }
+            }
+        });
 		textSearchField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -308,11 +354,11 @@ public class Library extends JFrame {
 			}
 		});
 		textSearchField.setBackground(Color.WHITE);
-		textSearchField.setBounds(163, 120, 138, 20);
+		textSearchField.setBounds(83, 119, 138, 20);
 		contentPane.add(textSearchField);
 		textSearchField.setColumns(10);
 		
-		JButton btnSearchButton = new JButton("SEARCH");
+		btnSearchButton = new JButton("SEARCH");
 		btnSearchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int count=0;
@@ -343,14 +389,20 @@ public class Library extends JFrame {
 				}
 			}
 		});
-		btnSearchButton.setBounds(320, 119, 89, 23);
+		btnSearchButton.setBounds(240, 118, 89, 23);
 		contentPane.add(btnSearchButton);
+		
+		lblmessagelabel = new JLabel("");
+		lblmessagelabel.setForeground(new Color(255, 0, 0));
+		lblmessagelabel.setBounds(368, 119, 204, 20);
+		contentPane.add(lblmessagelabel);
 		
 		// Set Library background
 		JLabel lblImageLabel = new JLabel("");
 		lblImageLabel.setBounds(0, 0, 611, 619);
 		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/blue.jpg")));
 		contentPane.add(lblImageLabel);		
+
 
 		// All Book check-box is selected
 		rdbtnAllButton.addActionListener(new ActionListener() {

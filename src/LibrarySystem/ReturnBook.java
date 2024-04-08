@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,6 +28,8 @@ import javax.swing.JTable;
 
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import net.proteanit.sql.DbUtils;
@@ -48,6 +51,8 @@ public class ReturnBook extends JFrame {
 	private JTextField ExpectedDateField;
 	private JPanel contentPane;
 	private JLabel lblName;
+	
+	private JButton btnSearchButton;
 	
 	/**
 	 * Launch the application.
@@ -169,6 +174,45 @@ public class ReturnBook extends JFrame {
 		
 		SearchField = new JTextField();
 		SearchField.setBounds(15, 92, 173, 23);
+		SearchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkInput();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                checkInput();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Plain text components do not fire these events
+            }
+
+            private void checkInput() {
+                // Get the current text from the searchTextField
+                String text = SearchField.getText();
+
+                if (text.equals("Enter ISBN here ...")) {
+                	btnSearchButton.setEnabled(false);
+                    return; // Exit the method
+                }
+
+                // Check if the text is empty
+                if (text.isEmpty()) {
+                	btnSearchButton.setEnabled(false);
+                } else {
+                    // Use regular expression to check if text contains only digits
+                    if (!Pattern.matches("\\d*", text)) {
+                    	btnSearchButton.setEnabled(false);
+                    } else {
+                    	btnSearchButton.setEnabled(true);
+                    }
+                }
+            }
+        });
+		
 		SearchField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -189,7 +233,7 @@ public class ReturnBook extends JFrame {
 		contentPane.add(SearchField);
 		SearchField.setColumns(10);
 		
-		JButton btnSearchButton = new JButton("Search");
+		btnSearchButton = new JButton("Search");
 		btnSearchButton.setBounds(192, 96, 89, 23);
 		btnSearchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

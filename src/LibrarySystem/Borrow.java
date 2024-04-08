@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,6 +31,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
@@ -59,6 +62,7 @@ public class Borrow extends JFrame {
 	
 	private static JTable tableBookList;
 	private static JTextPane textPaneFeedback;
+	private static JButton btnSearchButton;
 	
 	/**
 	 * Launch the application.
@@ -84,20 +88,9 @@ public class Borrow extends JFrame {
         StyledDocument doc = textPaneFeedback.getStyledDocument();
         
         // Define styles (colors) for each row
-        MutableAttributeSet blueBoldStyle = new SimpleAttributeSet();
-        StyleConstants.setForeground(blueBoldStyle, Color.BLUE);
-        StyleConstants.setBold(blueBoldStyle, true);
+        MutableAttributeSet BoldStyle = new SimpleAttributeSet();
+        StyleConstants.setBold(BoldStyle, true);
         
-        MutableAttributeSet magentaBoldStyle = new SimpleAttributeSet();
-        StyleConstants.setForeground(magentaBoldStyle, Color.MAGENTA);
-        StyleConstants.setBold(magentaBoldStyle, true);
-        
-        MutableAttributeSet blueStyle = doc.addStyle("blue", null);
-        StyleConstants.setForeground(blueStyle, Color.BLUE);
-        
-        MutableAttributeSet magentaStyle = doc.addStyle("magenta", null);
-        StyleConstants.setForeground(magentaStyle, Color.MAGENTA);
-
 		String query;
 		PreparedStatement pst;
 
@@ -113,15 +106,9 @@ public class Borrow extends JFrame {
 					String from = rs.getString("From");
 		            String feedback = rs.getString("Feedback");
 		            // Append data to the JTextPane with the appropriate style            
-	                if (rs.getRow() % 2 == 0) {
-	                	doc.insertString(doc.getLength(), "From: ", blueStyle);
-	                	doc.insertString(doc.getLength(), from + "\n", blueBoldStyle);
-	                    doc.insertString(doc.getLength(), feedback + "\n\n", blueStyle);
-	                } else {
-	                	doc.insertString(doc.getLength(), "From: ", magentaStyle);
-	                	doc.insertString(doc.getLength(), from + "\n", magentaBoldStyle);
-	                    doc.insertString(doc.getLength(), feedback + "\n\n", magentaStyle);
-	                }
+	                doc.insertString(doc.getLength(), "From: ", null);
+	                doc.insertString(doc.getLength(), from + "\n", BoldStyle);
+	                doc.insertString(doc.getLength(), feedback + "\n\n", null);
 				}
 				pst.close();
 				rs.close();
@@ -280,6 +267,45 @@ public class Borrow extends JFrame {
 		
 		SearchField = new JTextField();
 		SearchField.setBounds(9, 96, 173, 23);
+		SearchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkInput();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                checkInput();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Plain text components do not fire these events
+            }
+
+            private void checkInput() {
+                // Get the current text from the searchTextField
+                String text = SearchField.getText();
+
+                if (text.equals("Enter ISBN here ...")) {
+                	btnSearchButton.setEnabled(false);
+                    return; // Exit the method
+                }
+
+                // Check if the text is empty
+                if (text.isEmpty()) {
+                	btnSearchButton.setEnabled(false);
+                } else {
+                    // Use regular expression to check if text contains only digits
+                    if (!Pattern.matches("\\d*", text)) {
+                    	btnSearchButton.setEnabled(false);
+                    } else {
+                    	btnSearchButton.setEnabled(true);
+                    }
+                }
+            }
+        });
+		
 		SearchField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -300,7 +326,7 @@ public class Borrow extends JFrame {
 		contentPane.add(SearchField);
 		SearchField.setColumns(10);
 		
-		JButton btnSearchButton = new JButton("Search");
+		btnSearchButton = new JButton("Search");
 		btnSearchButton.setBounds(192, 96, 89, 23);
 		btnSearchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

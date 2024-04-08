@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -40,6 +41,8 @@ public class Discussion extends JFrame {
 	private static JTextField SearchtextField;
 	private static JLabel lblWordCount;
 	private static JTextArea textAreaReply;
+	private static JLabel lblmessageLabel;
+	private static JButton btnSearch;
 	
 	/**
 	 * Launch the application.
@@ -162,16 +165,49 @@ public class Discussion extends JFrame {
 		contentPane.add(btnMainButton);
 		
 		SearchtextField = new JTextField();
-		SearchtextField.setBounds(34, 69, 184, 20);
-		contentPane.add(SearchtextField);
-		SearchtextField.setColumns(10);
+		SearchtextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkInput();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                checkInput();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Plain text components do not fire these events
+            }
+
+            private void checkInput() {
+                // Get the current text from the searchTextField
+                String text = SearchtextField.getText();
+
+                if (text.equals("Enter ISBN here ...")) {
+                	lblmessageLabel.setText(""); // Clear the message label
+                	btnSearch.setEnabled(false);
+                    return; // Exit the method
+                }
+
+                // Check if the text is empty
+                if (text.isEmpty()) {
+                	lblmessageLabel.setText(""); // Clear the message label if input is empty
+                	btnSearch.setEnabled(false);
+                } else {
+                    // Use regular expression to check if text contains only digits
+                    if (!Pattern.matches("\\d*", text)) {
+                    	lblmessageLabel.setText("Non-numeric input detected!");
+                    	btnSearch.setEnabled(false);
+                    } else {
+                    	lblmessageLabel.setText("");
+                    	btnSearch.setEnabled(true);
+                    }
+                }
+            }
+        });
 		
-		JButton btnSearch = new JButton("SEARCH");
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fetchDataFromDatabase(SearchtextField.getText());
-			}
-		});
 		SearchtextField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -189,6 +225,25 @@ public class Discussion extends JFrame {
 				}
 			}
 		});
+		
+		SearchtextField.setBounds(34, 69, 184, 20);
+		contentPane.add(SearchtextField);
+		SearchtextField.setColumns(10);
+		
+		lblmessageLabel = new JLabel();
+		lblmessageLabel.setText("");
+		lblmessageLabel.setForeground(new Color(255, 0, 0));
+		lblmessageLabel.setBounds(340, 69, 257, 23);
+		contentPane.add(lblmessageLabel);
+		
+		btnSearch = new JButton("SEARCH");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fetchDataFromDatabase(SearchtextField.getText());
+			}
+		});
+		
+		
 		btnSearch.setBounds(233, 68, 89, 23);
 		contentPane.add(btnSearch);
 		
@@ -252,6 +307,8 @@ public class Discussion extends JFrame {
 		lblWordCount.setForeground(new Color(255, 0, 0));
 		lblWordCount.setBounds(523, 321, 100, 23);
 		contentPane.add(lblWordCount);
+		
+		
 		
 	}
 }
