@@ -5,6 +5,10 @@ import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
@@ -17,12 +21,15 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import javax.swing.JTextField;
@@ -44,6 +51,9 @@ public class Discussion extends JFrame {
 	private static JLabel lblmessageLabel;
 	private static JButton btnSearch;
 	
+	private JLabel lblbookname;
+	private JButton btnSubmitButton;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -52,6 +62,7 @@ public class Discussion extends JFrame {
 			public void run() {
 				try {
 					Discussion frame = new Discussion(0L); // Pass a default value for demonstration
+					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -99,7 +110,7 @@ public class Discussion extends JFrame {
 		PreparedStatement pst;
 
 		try {	
-			query = "select User.Name as 'From', Feedback.Feedback from User join Feedback on User.ID_User = Feedback.ID_User where Feedback.ISBN = ? ";
+			query = "select User.Name as 'From', Feedback.Feedback, Feedback.WrittenDate from User join Feedback on User.ID_User = Feedback.ID_User where Feedback.ISBN = ? ";
 			pst = conn.prepareStatement(query);
 			pst.setLong(1, Long.parseLong(searchtext)); 
 			ResultSet rs = pst.executeQuery();
@@ -109,14 +120,17 @@ public class Discussion extends JFrame {
 				while (rs.next()) {
 					String from = rs.getString("From");
 		            String feedback = rs.getString("Feedback");
+		            String writtendate = rs.getString("WrittenDate");
 		            // Append data to the JTextPane with the appropriate style            
 	                if (rs.getRow() % 2 == 0) {
-	                	doc.insertString(doc.getLength(), "From: ", blueStyle);
-	                	doc.insertString(doc.getLength(), from + "\n", blueBoldStyle);
+	                	doc.insertString(doc.getLength(), "Written by ", blueStyle);
+	                	doc.insertString(doc.getLength(), from, blueBoldStyle);
+	                	doc.insertString(doc.getLength(), " on " + writtendate + "\n", blueStyle);
 	                    doc.insertString(doc.getLength(), feedback + "\n\n", blueStyle);
 	                } else {
-	                	doc.insertString(doc.getLength(), "From: ", magentaStyle);
-	                	doc.insertString(doc.getLength(), from + "\n", magentaBoldStyle);
+	                	doc.insertString(doc.getLength(), "Written by ", magentaStyle);
+	                	doc.insertString(doc.getLength(), from , magentaBoldStyle);
+	                	doc.insertString(doc.getLength(), " on " + writtendate + " \n", magentaStyle);
 	                    doc.insertString(doc.getLength(), feedback + "\n\n", magentaStyle);
 	                }
 				}
@@ -144,6 +158,7 @@ public class Discussion extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblTitleWindowLabel = new JLabel("DISCUSSION FORUM");
+		lblTitleWindowLabel.setForeground(new Color(255, 255, 255));
 		lblTitleWindowLabel.setFont(new Font("Rockwell", Font.PLAIN, 25));
 		lblTitleWindowLabel.setBounds(222, 22, 278, 23);
 		contentPane.add(lblTitleWindowLabel);
@@ -156,11 +171,63 @@ public class Discussion extends JFrame {
 		textPaneFeedback.setEditable(false);
 		scrollPaneFeedback.setViewportView(textPaneFeedback);
 		
-		JButton btnSubmitButton = new JButton("SUBMIT");
+		btnSubmitButton = new JButton("SUBMIT");
+		btnSubmitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+				Random rand = new Random();
+				int ran_id = rand.nextInt(100);
+				String query;
+				PreparedStatement pst;
+				try {
+					query = "insert into Feedback (ID, ID_User, ISBN, Feedback, WrittenDate) values (?, ?, ?, ?, ?)";
+					pst = conn.prepareStatement(query);
+					pst.setLong(1, ran_id);
+					pst.setLong(2, userid);
+					pst.setString(3, SearchtextField.getText());
+					pst.setString(4, textAreaReply.getText());
+					pst.setString(5, dateFormat.format(new Date()));
+					pst.execute();
+					JOptionPane.showMessageDialog(null, "Thank you for providing feedback for the book.", "FEEDBACK", JOptionPane.INFORMATION_MESSAGE);
+					pst.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		btnSubmitButton.setBounds(393, 510, 89, 23);
 		contentPane.add(btnSubmitButton);
 		
 		JButton btnMainButton = new JButton("MAIN MENU");
+		btnMainButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String query = "select * from User where ID_User=?";
+					PreparedStatement pst = conn.prepareStatement(query);
+					pst.setLong(1, userid);
+					ResultSet rs=pst.executeQuery();
+					while(rs.next()) {
+						String type = rs.getString("Type");
+						if (type.equals("Faculty")) {
+								AdminMenu adm = new AdminMenu(userid);
+								adm.setVisible(true);
+								adm.setLocationRelativeTo(null);
+								dispose(); 
+								
+							} else if (type.equals("Student")) {
+								UserMenu userm = new UserMenu(userid);
+								userm.setVisible(true);
+								userm.setLocationRelativeTo(null);
+								dispose(); 
+							}
+					}
+					rs.close();
+					pst.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		btnMainButton.setBounds(511, 510, 120, 23);
 		contentPane.add(btnMainButton);
 		
@@ -233,13 +300,41 @@ public class Discussion extends JFrame {
 		lblmessageLabel = new JLabel();
 		lblmessageLabel.setText("");
 		lblmessageLabel.setForeground(new Color(255, 0, 0));
-		lblmessageLabel.setBounds(340, 69, 257, 23);
+		lblmessageLabel.setBounds(346, 69, 251, 23);
 		contentPane.add(lblmessageLabel);
 		
 		btnSearch = new JButton("SEARCH");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Get Book feedback
 				fetchDataFromDatabase(SearchtextField.getText());
+				
+				// Get the Book name 
+				String query;
+				PreparedStatement pst;
+				String name = null;
+				try {	
+					query = "select * from Book where ISBN = ? ";
+					pst = conn.prepareStatement(query);
+					pst.setLong(1, Long.parseLong(SearchtextField.getText())); 
+					ResultSet rs = pst.executeQuery();
+					int count = 0;
+					while (rs.next()) {
+						count = count + 1;
+						name = rs.getString("Title");
+				    }
+					if (count < 1) {
+						JOptionPane.showMessageDialog(null, "The book is not existed.", "SEARCH", JOptionPane.INFORMATION_MESSAGE);
+						btnSubmitButton.setEnabled(false);
+					} else {
+						btnSubmitButton.setEnabled(true);
+					}
+					pst.close();
+					rs.close();
+					lblbookname.setText(name);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 		});
 		
@@ -247,17 +342,20 @@ public class Discussion extends JFrame {
 		btnSearch.setBounds(233, 68, 89, 23);
 		contentPane.add(btnSearch);
 		
-		JLabel lblWelcome = new JLabel("Welcome to provide your feedback on the book");
+		JLabel lblWelcome = new JLabel("Welcome to provide your feedback on the book:");
+		lblWelcome.setForeground(new Color(255, 255, 255));
 		lblWelcome.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		lblWelcome.setBounds(34, 102, 287, 23);
 		contentPane.add(lblWelcome);
-
-		JLabel lblbookname = new JLabel("");
+		
+		lblbookname = new JLabel("");
+		lblbookname.setForeground(new Color(175, 238, 238));
 		lblbookname.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblbookname.setBounds(322, 102, 301, 23);
+		lblbookname.setBounds(307, 102, 316, 23);
 		contentPane.add(lblbookname);
 		
 		JLabel lblReplyLabel = new JLabel("Please provide some feedback about the book. (Max 500 words)");
+		lblReplyLabel.setForeground(new Color(255, 255, 255));
 		lblReplyLabel.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		lblReplyLabel.setBounds(34, 321, 385, 23);
 		contentPane.add(lblReplyLabel);
@@ -308,7 +406,13 @@ public class Discussion extends JFrame {
 		lblWordCount.setBounds(523, 321, 100, 23);
 		contentPane.add(lblWordCount);
 		
-		
+		// Set Borrow background
+		JLabel lblImageLabel = new JLabel("");
+		lblImageLabel.setForeground(new Color(255, 255, 255));
+		lblImageLabel.setBounds(0, 0, 672, 590);
+		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/blue.jpg")));
+		contentPane.add(lblImageLabel);
+
 		
 	}
 }

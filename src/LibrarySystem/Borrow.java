@@ -106,8 +106,8 @@ public class Borrow extends JFrame {
 					String from = rs.getString("From");
 		            String feedback = rs.getString("Feedback");
 		            // Append data to the JTextPane with the appropriate style            
-	                doc.insertString(doc.getLength(), "From: ", null);
-	                doc.insertString(doc.getLength(), from + "\n", BoldStyle);
+	                doc.insertString(doc.getLength(), "Written by ", null);
+	                doc.insertString(doc.getLength(), from + ":\n", BoldStyle);
 	                doc.insertString(doc.getLength(), feedback + "\n\n", null);
 				}
 				pst.close();
