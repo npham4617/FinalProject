@@ -130,6 +130,13 @@ public class AdminMenu extends JFrame {
 		
 		
 		JButton btnProfileButton = new JButton("USER PROFILE");
+		btnProfileButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Profile pro = new Profile(userid);
+				pro.setVisible(true);
+				pro.setLocationRelativeTo(null);
+			}
+		});
 		btnProfileButton.setBounds(20, 253, 131, 23);
 		contentPane.add(btnProfileButton);
 	
