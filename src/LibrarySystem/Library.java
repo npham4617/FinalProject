@@ -122,7 +122,14 @@ public class Library extends JFrame {
 		scrollPane.setBounds(27, 359, 545, 199);
 		contentPane.add(scrollPane);
 
-		table = new JTable();
+		table = new JTable() {
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
+		
 		table.setFont(new Font("Verdana", Font.PLAIN, 10));
 		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(

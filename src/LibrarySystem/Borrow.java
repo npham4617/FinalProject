@@ -362,7 +362,14 @@ public class Borrow extends JFrame {
 		scrollPane.setBounds(10, 140, 317, 231);
 		scrollPane.setFont(new Font("Verdana", Font.PLAIN, 11));
 		contentPane.add(scrollPane);
-		tableBookList = new JTable();
+		
+		tableBookList = new JTable() {
+				@Override
+			    public boolean isCellEditable(int row, int column) {
+			       //all cells false
+			       return false;
+			    };
+		};
 		
 		scrollPane.setViewportView(tableBookList);
 		tableBookList.setModel(new DefaultTableModel(
@@ -371,8 +378,11 @@ public class Borrow extends JFrame {
 			new String[] {
 				"ISBN", "Title", "Author", "Genre"
 			}
+			
+			
 		));
 		
+			
 		// Show all available books into the table
 		try {
 			String query = "select ISBN, Title, Author, Genre from Book where Status='Available'";

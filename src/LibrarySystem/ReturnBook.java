@@ -280,7 +280,13 @@ public class ReturnBook extends JFrame {
 		scrollPane.setBounds(15, 127, 317, 186);
 		scrollPane.setFont(new Font("Verdana", Font.PLAIN, 11));
 		contentPane.add(scrollPane);
-		tableBookHistory = new JTable();
+		tableBookHistory = new JTable() {
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		
 		scrollPane.setViewportView(tableBookHistory);
 		tableBookHistory.setModel(new DefaultTableModel(

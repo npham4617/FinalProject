@@ -10,6 +10,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
@@ -265,14 +266,14 @@ public class Profile extends JFrame {
 					
 					query = "select * from Profile where ID_User = ?";
 					pst = conn.prepareStatement(query);
-					pst.setLong(4, userid);
+					pst.setLong(1, userid);
 					rs = pst.executeQuery();
 					int count =0;
 					while(rs.next()) {
 						count=count+1;
 					}
 					if(count==0) {
-						query = "insert into Profile (ID, ID_User, FavoriteBooks, ReadingHabits, LiteraryPreference, Bio) values (?, ?, ?, ?, ?, ?)";
+						query = "insert into Profile (ID, ID_User, FavoriteBooks, ReadingHabits, LiteraryPreferences, Bio) values (?, ?, ?, ?, ?, ?)";
 						pst = conn.prepareStatement(query);
 						pst.setInt(1, ran_id);
 						pst.setLong(2, userid);
@@ -282,8 +283,9 @@ public class Profile extends JFrame {
 						pst.setString(6, DesbtextArea.getText());
 						pst.execute();
 						pst.close();
+						JOptionPane.showMessageDialog(null, "Your profile is updated successfully", "PROFILE", JOptionPane.INFORMATION_MESSAGE);
 					} else if(count==1) {
-						query = "update Profile set FavoriteBooks=?, ReadingHabits=?, LiteraryPreference=?, Bio=? where ID_User=?";
+						query = "update Profile set FavoriteBooks=?, ReadingHabits=?, LiteraryPreferences=?, Bio=? where ID_User=?";
 						pst = conn.prepareStatement(query);
 						pst.setString(1, favbooktextArea.getText());
 						pst.setString(2, readhabittextArea.getText());
@@ -292,6 +294,7 @@ public class Profile extends JFrame {
 						pst.setLong(5, userid);
 						pst.execute();
 						pst.close();
+						JOptionPane.showMessageDialog(null, "Your profile is updated successfully", "PROFILE", JOptionPane.INFORMATION_MESSAGE);
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -333,7 +336,6 @@ public class Profile extends JFrame {
 		});
 		btnMainButton.setBounds(314, 615, 108, 23);
 		contentPane.add(btnMainButton);
-		
 		
 		performDatabaseOperation(userid);
 		

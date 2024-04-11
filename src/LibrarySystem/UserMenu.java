@@ -108,6 +108,14 @@ public class UserMenu extends JFrame {
 		contentPane.add(btnReturnButton);
 
 		JButton btnProfileButton = new JButton("USER PROFILE");
+		btnProfileButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Profile pro = new Profile(userid);
+				pro.setVisible(true);
+				pro.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
 		btnProfileButton.setBounds(20, 213, 131, 23);
 		contentPane.add(btnProfileButton);
 	
@@ -127,6 +135,14 @@ public class UserMenu extends JFrame {
 		
 		 
 		JButton btnMeetupButton = new JButton("MEETUP");
+		btnMeetupButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Meetup met = new Meetup(userid);
+				met.setVisible(true);
+				met.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
 		btnMeetupButton.setBounds(20, 313, 131, 23);
 		contentPane.add(btnMeetupButton);
 		setContentPane(contentPane);

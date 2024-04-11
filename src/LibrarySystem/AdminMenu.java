@@ -155,6 +155,14 @@ public class AdminMenu extends JFrame {
 		
 		 
 		JButton btnMeetupButton = new JButton("MEETUP");
+		btnMeetupButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Meetup met = new Meetup(userid);
+				met.setVisible(true);
+				met.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
 		btnMeetupButton.setBounds(20, 353, 131, 23);
 		contentPane.add(btnMeetupButton);
 	

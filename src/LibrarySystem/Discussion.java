@@ -87,6 +87,44 @@ public class Discussion extends JFrame {
 		text.setForeground(Color.black);
 	}	
 	
+	public static void Refreshdata(int feedbackid) {
+		String query;
+		PreparedStatement pst;
+    	StyledDocument doc = textPaneFeedback.getStyledDocument();
+		// Append new feedback to the JTextPane
+	    MutableAttributeSet BoldStyle = new SimpleAttributeSet();
+	    StyleConstants.setForeground(BoldStyle, Color.BLACK);
+	    StyleConstants.setBold(BoldStyle, true);
+	    try {
+		    // Refresh the data
+		    query = "select User.Name as 'From', Feedback.Feedback, Feedback.WrittenDate from User join Feedback on User.ID_User = Feedback.ID_User where Feedback.ID = ? ";
+		    pst = conn.prepareStatement(query);
+		    pst.setLong(1, feedbackid);
+		    ResultSet rs = pst.executeQuery();
+		    while (rs.next()) {
+		        String from = rs.getString("From");
+		        String feedback = rs.getString("Feedback");
+		        String writtendate = rs.getString("WrittenDate");
+		        
+		        String defaultText = "\n\t\t          There is no any feedback for this book.";
+		        String currentText = doc.getText(0, doc.getLength());
+		        
+		        if (currentText.isEmpty() || currentText.trim().equals(defaultText.trim())) {
+		            // Set the text to null or empty
+		            textPaneFeedback.setText(null);
+		        }
+		        doc.insertString(doc.getLength(),"Written by ", null);
+			    doc.insertString(doc.getLength(), from , BoldStyle);
+			    doc.insertString(doc.getLength(), " on " + writtendate + " \n", null);
+			    doc.insertString(doc.getLength(), feedback + "\n\n", null);
+		        pst.close();
+				rs.close();
+		    }
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+    }
+    
 	public static void fetchDataFromDatabase(String searchtext) {
 		textPaneFeedback.setText(null);
         StyledDocument doc = textPaneFeedback.getStyledDocument();
@@ -115,7 +153,7 @@ public class Discussion extends JFrame {
 			pst.setLong(1, Long.parseLong(searchtext)); 
 			ResultSet rs = pst.executeQuery();
 			if (!rs.isBeforeFirst()) {
-		        doc.insertString(doc.getLength(), "\n\t\t          There is no any feedback for this book.", null);
+				doc.insertString(doc.getLength(), "\n\t\t          There is no any feedback for this book.", null);
 		    } else {
 				while (rs.next()) {
 					String from = rs.getString("From");
@@ -179,6 +217,7 @@ public class Discussion extends JFrame {
 				int ran_id = rand.nextInt(100);
 				String query;
 				PreparedStatement pst;
+				
 				try {
 					query = "insert into Feedback (ID, ID_User, ISBN, Feedback, WrittenDate) values (?, ?, ?, ?, ?)";
 					pst = conn.prepareStatement(query);
@@ -189,7 +228,8 @@ public class Discussion extends JFrame {
 					pst.setString(5, dateFormat.format(new Date()));
 					pst.execute();
 					JOptionPane.showMessageDialog(null, "Thank you for providing feedback for the book.", "FEEDBACK", JOptionPane.INFORMATION_MESSAGE);
-					pst.close();
+					pst.close();	
+					Refreshdata(ran_id);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
