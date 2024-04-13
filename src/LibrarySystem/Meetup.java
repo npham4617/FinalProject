@@ -86,13 +86,13 @@ public class Meetup extends JFrame {
 		PreparedStatement pst;
 
 		try {	
-			query = "select * from User join `Profile` on User.ID_User = Profile.ID_User where User.ID_User = ? ";
+			query = "select * from User join `Profile` on User.ID_User = Profile.ID_User where User.ID_User = ? AND Profile.Shared='YES' ";
 			pst = conn.prepareStatement(query);
 			pst.setLong(1, i); 
 			ResultSet rs = pst.executeQuery();
 			if (!rs.isBeforeFirst()) {
 				doc.insertString(doc.getLength(), "The information for this user is unavailable.", null);
-		    } else {
+		    } else if (rs.getString("Shared").equals("YES")) {
 				while (rs.next()) {
 					String name = rs.getString("Name");
 			        String gender = rs.getString("Gender");
@@ -132,8 +132,9 @@ public class Meetup extends JFrame {
 					} else {
 						doc.insertString(doc.getLength(), "Short description: " + shortdes + "\n", orgStyle);
 					}
-				}
-			}
+				} 
+
+			} 
 			pst.close();
 			rs.close();
 		} catch (Exception e) {
@@ -148,7 +149,6 @@ public class Meetup extends JFrame {
         
         // Define styles (colors) for each row
         MutableAttributeSet BoldStyle = new SimpleAttributeSet();
-        StyleConstants.setForeground(BoldStyle, Color.BLACK);
         StyleConstants.setBold(BoldStyle, true);
         
 		String query;
@@ -220,7 +220,6 @@ public class Meetup extends JFrame {
 		profilescrollPane.setViewportView(profiletextPanel);
 		profiletextPanel.setBounds(349, 130, 288, 167);
 		profiletextPanel.insertIcon(new ImageIcon(Library.class.getResource("/Image/textpanelmeet.png")));
-
 
 		JLabel lblWelcome = new JLabel("Hi, ");
 		lblWelcome.setForeground(new Color(255, 255, 255));
@@ -321,7 +320,7 @@ public class Meetup extends JFrame {
 		        //Welcome to explore our community!
 		        userChatButton.addActionListener(new ActionListener() {
 		        	public void actionPerformed(ActionEvent e) {
-		        		ChatRoom chat = new ChatRoom(userid);
+		        		ChatRoom chat = new ChatRoom(userid, Long.parseLong(id_user));
 						chat.setVisible(true);
 						chat.setLocationRelativeTo(null);
 		        	}
@@ -330,9 +329,9 @@ public class Meetup extends JFrame {
 		       userProfileButton = new JButton();
 		       userProfileButton.addActionListener(new ActionListener() {
 		    	   public void actionPerformed(ActionEvent e) {
-			    		 //ProfileData(Long.parseLong(id_user));
-			    		 String er = "2024";
-			        	 ProfileData(Long.parseLong(er));	 
+			    		// ProfileData(Long.parseLong(id_user));
+			    		String er = "2024";
+			        	ProfileData(Long.parseLong(er));	 
 		        	}
 		       });
 		                
@@ -340,7 +339,7 @@ public class Meetup extends JFrame {
 		       userFollowButton.addActionListener(new ActionListener() {
 		        	public void actionPerformed(ActionEvent e) {
 		        		//FollowData(Long.parseLong(id_user));
-		        		String er = "2024";
+		        		String er = "2023";
 		        		FollowData(Long.parseLong(er));	        		
 		        	}
 		       });
