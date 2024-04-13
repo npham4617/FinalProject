@@ -138,7 +138,7 @@ public class Discussion extends JFrame {
         StyleConstants.setForeground(magentaBoldStyle, Color.MAGENTA);
         StyleConstants.setBold(magentaBoldStyle, true);
         
-        MutableAttributeSet blueStyle = doc.addStyle("blue", null);
+        MutableAttributeSet blueStyle = new SimpleAttributeSet();
         StyleConstants.setForeground(blueStyle, Color.BLUE);
         
         MutableAttributeSet magentaStyle = doc.addStyle("magenta", null);
