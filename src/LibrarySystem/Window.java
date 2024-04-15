@@ -2,14 +2,19 @@ package LibrarySystem;
 
 import java.awt.EventQueue;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 
 public class Window extends JFrame {
 
@@ -22,6 +27,8 @@ public class Window extends JFrame {
 	public Window otherWindow;
 	static String name1;
 	static String name2;
+	private JButton btnCloseButton;
+	private JLabel lbltitlelabel;
 
 	/**
 	 * Launch the application.
@@ -31,8 +38,9 @@ public class Window extends JFrame {
 			public void run() {
 				try {
 					Window frame = new Window();
-					frame.setVisible(true);	
-				
+					frame.setUndecorated(true);
+					frame.setVisible(true);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -59,10 +67,10 @@ public class Window extends JFrame {
 	 * Create the frame.
 	 */
 	public Window() {
-		setTitle("Chat Window");
 		setResizable(false);
+		setTitle("Chat Window");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 455, 454);
+		setBounds(100, 100, 455, 437);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -70,7 +78,7 @@ public class Window extends JFrame {
 		contentPane.setLayout(null);
 		
 		DisplaytextArea = new JTextArea();
-		DisplaytextArea.setBounds(10, 45, 419, 277);
+		DisplaytextArea.setBounds(10, 83, 419, 239);
 		contentPane.add(DisplaytextArea);
 		
 		SendtextArea = new JTextArea();
@@ -83,15 +91,17 @@ public class Window extends JFrame {
 				sendMessage();
 			}
 		});
-		btnSendButton.setBounds(340, 346, 89, 38);
+		btnSendButton.setBounds(333, 338, 89, 38);
 		contentPane.add(btnSendButton);
 		
 		JLabel lblNewLabel = new JLabel("Chat window for ");
-		lblNewLabel.setBounds(10, 11, 96, 23);
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setBounds(10, 47, 96, 23);
 		contentPane.add(lblNewLabel);
 		
 		username = new JLabel("");
-		username.setBounds(109, 11, 125, 23);
+		username.setForeground(new Color(255, 255, 255));
+		username.setBounds(109, 47, 125, 23);
 		contentPane.add(username);
 		
 		JButton btnClearButton = new JButton("CLEAR");
@@ -100,8 +110,31 @@ public class Window extends JFrame {
 				DisplaytextArea.setText("");
 			}
 		});
-		btnClearButton.setBounds(340, 11, 89, 23);
+		btnClearButton.setBounds(340, 50, 89, 23);
 		contentPane.add(btnClearButton);
+		
+		lbltitlelabel = new JLabel("Chat Room");
+		lbltitlelabel.setBounds(10, 10, 363, 23);
+		contentPane.add(lbltitlelabel);
+		lbltitlelabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+		
+		btnCloseButton = new JButton("X");
+		btnCloseButton.setBounds(383, 11, 46, 23);
+		contentPane.add(btnCloseButton);
+		btnCloseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		btnCloseButton.setBackground(new Color(255, 0, 0));
+		
+		
+		// Set Window background
+		JLabel lblImageLabel = new JLabel("");
+		lblImageLabel.setBounds(0, 40, 439, 359);
+		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/floral-ornaments.jpg")));
+		contentPane.add(lblImageLabel);
 	}
+
 
 }

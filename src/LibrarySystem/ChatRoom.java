@@ -8,12 +8,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class ChatRoom extends JFrame {
 
@@ -56,6 +58,8 @@ public class ChatRoom extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblLabeluser1 = new JLabel("1st username");
+		lblLabeluser1.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+		lblLabeluser1.setForeground(new Color(255, 255, 255));
 		lblLabeluser1.setBounds(189, 81, 93, 23);
 		contentPane.add(lblLabeluser1);
 		
@@ -83,6 +87,8 @@ public class ChatRoom extends JFrame {
 		user1textField.setColumns(10);
 		
 		JLabel lblLabeluser2 = new JLabel("2nd username");
+		lblLabeluser2.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
+		lblLabeluser2.setForeground(new Color(255, 255, 255));
 		lblLabeluser2.setBounds(189, 176, 93, 23);
 		contentPane.add(lblLabeluser2);
 		
@@ -114,10 +120,13 @@ public class ChatRoom extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Window win1 = new Window();
 				win1.username.setText(user1textField.getText());
+				win1.setUndecorated(true);
+				win1.setLocationRelativeTo(null);
 				
 				Window win2 = new Window();
-				win2.username.setText(user2textField.getText());
-				win2.setLocationRelativeTo(win1);			
+				win2.username.setText(user2textField.getText());		
+				win2.setUndecorated(true);
+				win2.setLocation(win1.getX() + win1.getWidth() + 20, win1.getY());
 				
 				win1.setOtherWindow(win2);
 		        win2.setOtherWindow(win1);
@@ -131,8 +140,15 @@ public class ChatRoom extends JFrame {
 		contentPane.add(btnjoinButton);
 		
 		JLabel lbltitleLabel = new JLabel("CHAT ROOM");
+		lbltitleLabel.setForeground(new Color(255, 255, 255));
 		lbltitleLabel.setFont(new Font("Rockwell", Font.PLAIN, 25));
 		lbltitleLabel.setBounds(144, 25, 167, 23);
 		contentPane.add(lbltitleLabel);
+		
+		// Set ChatRoom background
+		JLabel lblImageLabel = new JLabel("");
+		lblImageLabel.setBounds(0, 0, 479, 379);
+		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/floral-ornaments.jpg")));
+		contentPane.add(lblImageLabel);
 	}
 }
