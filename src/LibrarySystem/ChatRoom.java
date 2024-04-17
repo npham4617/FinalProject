@@ -148,7 +148,7 @@ public class ChatRoom extends JFrame {
 		// Set ChatRoom background
 		JLabel lblImageLabel = new JLabel("");
 		lblImageLabel.setBounds(0, 0, 479, 379);
-		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/floral-ornaments.jpg")));
+		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/pink.png")));
 		contentPane.add(lblImageLabel);
 	}
 }

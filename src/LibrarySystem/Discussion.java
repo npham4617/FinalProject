@@ -196,7 +196,6 @@ public class Discussion extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblTitleWindowLabel = new JLabel("DISCUSSION FORUM");
-		lblTitleWindowLabel.setForeground(new Color(255, 255, 255));
 		lblTitleWindowLabel.setFont(new Font("Rockwell", Font.PLAIN, 25));
 		lblTitleWindowLabel.setBounds(222, 22, 278, 23);
 		contentPane.add(lblTitleWindowLabel);
@@ -383,7 +382,6 @@ public class Discussion extends JFrame {
 		contentPane.add(btnSearch);
 		
 		JLabel lblWelcome = new JLabel("Welcome to provide your feedback on the book:");
-		lblWelcome.setForeground(new Color(255, 255, 255));
 		lblWelcome.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		lblWelcome.setBounds(34, 102, 287, 23);
 		contentPane.add(lblWelcome);
@@ -395,7 +393,6 @@ public class Discussion extends JFrame {
 		contentPane.add(lblbookname);
 		
 		JLabel lblReplyLabel = new JLabel("Please provide some feedback about the book. (Max 500 words)");
-		lblReplyLabel.setForeground(new Color(255, 255, 255));
 		lblReplyLabel.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		lblReplyLabel.setBounds(34, 321, 385, 23);
 		contentPane.add(lblReplyLabel);
@@ -448,9 +445,8 @@ public class Discussion extends JFrame {
 		
 		// Set Borrow background
 		JLabel lblImageLabel = new JLabel("");
-		lblImageLabel.setForeground(new Color(255, 255, 255));
 		lblImageLabel.setBounds(0, 0, 672, 590);
-		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/blue.jpg")));
+		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/group.png")));
 		contentPane.add(lblImageLabel);
 
 		

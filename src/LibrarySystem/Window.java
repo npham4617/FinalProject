@@ -15,6 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 
 public class Window extends JFrame {
 
@@ -29,6 +32,9 @@ public class Window extends JFrame {
 	static String name2;
 	private JButton btnCloseButton;
 	private JLabel lbltitlelabel;
+	private int initialX = 0;
+    private int initialY = 0;
+
 
 	/**
 	 * Launch the application.
@@ -72,6 +78,21 @@ public class Window extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 455, 437);
 		contentPane = new JPanel();
+		contentPane.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+                initialX = e.getX();
+                initialY = e.getY();
+            }
+		});
+		
+		contentPane.addMouseMotionListener(new MouseAdapter() {
+            public void mouseDragged(MouseEvent e) {
+                int newX = getLocation().x + e.getX() - initialX;
+                int newY = getLocation().y + e.getY() - initialY;
+                setLocation(newX, newY);
+            }
+        });
+		
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -126,15 +147,16 @@ public class Window extends JFrame {
 				dispose();
 			}
 		});
-		btnCloseButton.setBackground(new Color(255, 0, 0));
+		btnCloseButton.setBackground(new Color(255, 128, 192));
 		
 		
 		// Set Window background
 		JLabel lblImageLabel = new JLabel("");
 		lblImageLabel.setBounds(0, 40, 439, 359);
-		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/floral-ornaments.jpg")));
+		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/pink.png")));
 		contentPane.add(lblImageLabel);
+		
+		
 	}
-
 
 }

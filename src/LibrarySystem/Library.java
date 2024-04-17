@@ -123,6 +123,11 @@ public class Library extends JFrame {
 		contentPane.add(scrollPane);
 
 		table = new JTable() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 		    public boolean isCellEditable(int row, int column) {
 		       //all cells false

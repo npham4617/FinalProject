@@ -142,13 +142,11 @@ public class Profile extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblTitleWindowLabel = new JLabel("USER PROFILE");
-		lblTitleWindowLabel.setForeground(new Color(255, 255, 255));
 		lblTitleWindowLabel.setFont(new Font("Rockwell", Font.PLAIN, 25));
 		lblTitleWindowLabel.setBounds(210, 11, 166, 30);
 		contentPane.add(lblTitleWindowLabel);
 		
 		JLabel lblName = new JLabel("Name");
-		lblName.setForeground(new Color(255, 255, 255));
 		lblName.setBounds(120, 71, 46, 23);
 		contentPane.add(lblName);
 		
@@ -158,7 +156,6 @@ public class Profile extends JFrame {
 		NametextField.setColumns(10);
 		
 		JLabel lblAge = new JLabel("Age");
-		lblAge.setForeground(new Color(255, 255, 255));
 		lblAge.setBounds(120, 105, 46, 23);
 		contentPane.add(lblAge);
 		
@@ -168,7 +165,6 @@ public class Profile extends JFrame {
 		AgetextField.setColumns(10);
 		
 		JLabel lblGender = new JLabel("Gender");
-		lblGender.setForeground(new Color(255, 255, 255));
 		lblGender.setBounds(302, 105, 54, 23);
 		contentPane.add(lblGender);
 		
@@ -180,7 +176,6 @@ public class Profile extends JFrame {
 		
 		
 		JLabel lblLocation = new JLabel("Location");
-		lblLocation.setForeground(new Color(255, 255, 255));
 		lblLocation.setBounds(120, 139, 76, 23);
 		contentPane.add(lblLocation);
 		
@@ -190,7 +185,6 @@ public class Profile extends JFrame {
 		LocationtextField.setColumns(10);
 		
 		JLabel lblfavbook = new JLabel("Favorite Books");
-		lblfavbook.setForeground(new Color(255, 255, 255));
 		lblfavbook.setBounds(120, 177, 85, 23);
 		contentPane.add(lblfavbook);
 		
@@ -203,7 +197,6 @@ public class Profile extends JFrame {
 		favbookscrollPane.setViewportView(favbooktextArea);
 		
 		JLabel lblhabit = new JLabel("Reading Habits");
-		lblhabit.setForeground(new Color(255, 255, 255));
 		lblhabit.setBounds(120, 271, 85, 23);
 		contentPane.add(lblhabit);
 		
@@ -216,7 +209,6 @@ public class Profile extends JFrame {
 		readhabitscrollPane.setViewportView(readhabittextArea);
 		
 		JLabel lblPreferences = new JLabel("Preferences");
-		lblPreferences.setForeground(new Color(255, 255, 255));
 		lblPreferences.setBounds(120, 367, 85, 23);
 		contentPane.add(lblPreferences);
 		
@@ -231,7 +223,6 @@ public class Profile extends JFrame {
 		
 	
 		JLabel lbldescription = new JLabel("Short description");
-		lbldescription.setForeground(new Color(255, 255, 255));
 		lbldescription.setBounds(120, 462, 98, 23);
 		contentPane.add(lbldescription);
 		
@@ -273,7 +264,7 @@ public class Profile extends JFrame {
 						count=count+1;
 					}
 					if(count==0) {
-						query = "insert into Profile (ID, ID_User, FavoriteBooks, ReadingHabits, LiteraryPreferences, Bio) values (?, ?, ?, ?, ?, ?)";
+						query = "insert into Profile (ID, ID_User, FavoriteBooks, ReadingHabits, LiteraryPreferences, Bio, Shared) values (?, ?, ?, ?, ?, ?, ?)";
 						pst = conn.prepareStatement(query);
 						pst.setInt(1, ran_id);
 						pst.setLong(2, userid);
@@ -281,17 +272,19 @@ public class Profile extends JFrame {
 						pst.setString(4, readhabittextArea.getText());
 						pst.setString(5, PreferencestextArea.getText());
 						pst.setString(6, DesbtextArea.getText());
+						pst.setString(7, "unshared");
 						pst.execute();
 						pst.close();
 						JOptionPane.showMessageDialog(null, "Your profile is updated successfully", "PROFILE", JOptionPane.INFORMATION_MESSAGE);
 					} else if(count==1) {
-						query = "update Profile set FavoriteBooks=?, ReadingHabits=?, LiteraryPreferences=?, Bio=? where ID_User=?";
+						query = "update Profile set FavoriteBooks=?, ReadingHabits=?, LiteraryPreferences=?, Bio=?, Shared=? where ID_User=?";
 						pst = conn.prepareStatement(query);
 						pst.setString(1, favbooktextArea.getText());
 						pst.setString(2, readhabittextArea.getText());
 						pst.setString(3, PreferencestextArea.getText());
 						pst.setString(4, DesbtextArea.getText());
-						pst.setLong(5, userid);
+						pst.setString(5, "unshared");
+						pst.setLong(6, userid);
 						pst.execute();
 						pst.close();
 						JOptionPane.showMessageDialog(null, "Your profile is updated successfully", "PROFILE", JOptionPane.INFORMATION_MESSAGE);
@@ -342,7 +335,7 @@ public class Profile extends JFrame {
 		// Set Profile background
 		JLabel lblImageLabel = new JLabel("");
 		lblImageLabel.setBounds(0, 0, 601, 665);
-		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/blue.jpg")));
+		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/group.png")));
 		contentPane.add(lblImageLabel);		
 	}
 }
