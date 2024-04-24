@@ -197,7 +197,7 @@ public class Groupchat extends JFrame {
 		contentPane.add(btnAddButton);
 		
 
-		JButton btnjoinButton = new JButton("JOIN CHAT");
+	/*	JButton btnjoinButton = new JButton("JOIN CHAT");
 		btnjoinButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				List<Window> windows = new ArrayList<>();
@@ -235,7 +235,36 @@ public class Groupchat extends JFrame {
 		});
 		btnjoinButton.setBounds(191, 357, 118, 23);
 		contentPane.add(btnjoinButton);
-
+*/
+		JButton btnjoinButton = new JButton("JOIN CHAT");
+		btnjoinButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				List<groupwindow> windows = new ArrayList<>();
+	        
+		        // Create and configure windows for each user
+				int numUsers = Math.min(5, userList.size()); 
+		        for (int i = 0; i < numUsers; i++) {
+		        	groupwindow window = new groupwindow();
+		            window.username.setText(userList.get(i).getName());
+		            window.setUndecorated(true);
+		            window.setLocationRelativeTo(null);
+		            windows.add(window);
+		        }   
+		        
+		        // Make all windows visible
+		        for (groupwindow window : windows) {
+		            window.setVisible(true);
+		        }
+		        
+		        // Close the current window
+		        dispose();
+			}
+		});
+		btnjoinButton.setBounds(191, 357, 118, 23);
+		contentPane.add(btnjoinButton);
+		
+		
+		
 		
 		JLabel lblTitleLabel = new JLabel("GROUP CHAT");
 		lblTitleLabel.setBounds(138, 11, 207, 30);

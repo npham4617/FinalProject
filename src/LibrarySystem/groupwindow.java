@@ -1,6 +1,20 @@
 package LibrarySystem;
 
+
+import java.awt.Color;
 import java.awt.EventQueue;
+
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -8,22 +22,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.WindowConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
 
-public class Window extends JFrame {
+
+public class groupwindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	public JTextArea DisplaytextArea;
 	public JTextArea SendtextArea;
 	public JLabel username;
 	public JButton btnSendButton;
@@ -33,6 +39,11 @@ public class Window extends JFrame {
 	private int initialX = 0;
     private int initialY = 0;
 
+    public JTextArea DisplaytextArea;  
+   
+	private Socket socket;
+	private BufferedReader bufferedReader;
+	private BufferedWriter bufferedWriter;
 
 	/**
 	 * Launch the application.
@@ -41,10 +52,10 @@ public class Window extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Window frame = new Window();
-					frame.setUndecorated(true);
+					groupwindow frame = new groupwindow();
 					frame.setVisible(true);
-
+					frame.listenForMessage();
+					frame.sendMessage();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -52,26 +63,66 @@ public class Window extends JFrame {
 		});
 	}
 	
-	public void setOtherWindow(Window otherWindow) {
-        this.otherWindow = otherWindow;
-    }
-	
-	private void sendMessage() {
-        String message = SendtextArea.getText().trim();
-        if (!message.isEmpty()) {
-        	DisplaytextArea.append(username.getText() + ": " + message + "\n");
-        	if (otherWindow != null) {
-        		otherWindow.DisplaytextArea.append(username.getText() + ": " + message + "\n");
-        	}
-        	SendtextArea.setText("");
-        }
-    }
-
-	/**
+    /**
 	 * Create the frame.
 	 */
-	public Window() {
-		setResizable(false);
+	
+	public void listenForMessage() {
+		new Thread(new Runnable() {
+			public void run() {
+				String msgFromGroupChat = null;
+				while (socket.isConnected()) {
+					try {
+						msgFromGroupChat = bufferedReader.readLine();
+						final String messageToAppend = msgFromGroupChat;
+						SwingUtilities.invokeLater(() -> {
+					        DisplaytextArea.append(messageToAppend + "\n");
+					    });
+					}catch(IOException e) {
+						closeEverytthing(socket, bufferedReader, bufferedWriter);
+						break;
+					}
+				}
+			}
+		}).start();
+	}
+	
+	public void sendMessage() {
+		if (socket == null || socket.isClosed()) {
+	        // Ensure socket is initialized
+	        try {
+	            socket = new Socket("localhost", 9806);
+	            bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+	        } catch (IOException e) {
+	            closeEverytthing(socket, bufferedReader, bufferedWriter);
+	            return; // Exit if there's an error initializing the socket
+	        }
+	    }
+		
+		try {
+	        String messageToSend = username.getText() + ": " + SendtextArea.getText().trim(); // Prepare message
+	        bufferedWriter.write(messageToSend); // Write to the output stream
+	        bufferedWriter.newLine(); // New line for separation
+	        bufferedWriter.flush(); // Ensure the message is sent
+	        
+	        // Clear the input text area after sending the message
+	        SendtextArea.setText("");
+	    } catch (IOException e) {
+	        closeEverytthing(socket, bufferedReader, bufferedWriter);
+	    }
+ 
+	}
+
+	public groupwindow() {
+		try {
+			socket = new Socket("localhost", 9806);
+			this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch(IOException e) {
+			closeEverytthing(socket, bufferedReader, bufferedWriter);
+		}
+
+	 	setResizable(false);
 		setTitle("Chat Window");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 455, 437);
@@ -110,6 +161,7 @@ public class Window extends JFrame {
 				sendMessage();
 			}
 		});
+		
 		btnSendButton.setBounds(333, 338, 89, 38);
 		contentPane.add(btnSendButton);
 		
@@ -146,15 +198,32 @@ public class Window extends JFrame {
 			}
 		});
 		btnCloseButton.setBackground(new Color(255, 128, 192));
-		
-		
+			
 		// Set Window background
 		JLabel lblImageLabel = new JLabel("");
 		lblImageLabel.setBounds(0, 40, 439, 359);
 		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/pink.png")));
 		contentPane.add(lblImageLabel);
 		
-		
+		DisplaytextArea = new JTextArea();
+		DisplaytextArea.setBounds(10, 81, 412, 232);
+		contentPane.add(DisplaytextArea);
+	}
+
+	public void closeEverytthing(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+		try {
+			if (bufferedReader!=null) {
+				bufferedReader.close();
+			}
+			if (bufferedWriter!=null) {
+				bufferedWriter.close();
+			}
+			if (socket!=null) {
+				socket.close();
+			}
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

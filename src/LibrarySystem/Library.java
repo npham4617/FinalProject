@@ -514,7 +514,7 @@ public class Library extends JFrame {
 					}
 					if(count >= 1)
 					{
-						JOptionPane.showMessageDialog(null, "Book is existed. Try Again.", "LOGIN", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Book is existed. Try Again.", "WARNING", JOptionPane.INFORMATION_MESSAGE);
 						// Set text field is clear
 						textISBN.setText("");
 						textTitle.setText("");
@@ -558,7 +558,7 @@ public class Library extends JFrame {
 						count=count+1;
 					}
 					if(count < 1) {
-						JOptionPane.showMessageDialog(null, "Book is not existed. Try Again.", "LOGIN", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Book is not existed. Try Again.", "WARNING", JOptionPane.INFORMATION_MESSAGE);
 						// Set text field is clear
 						textISBN.setText("");
 						textTitle.setText("");

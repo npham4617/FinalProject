@@ -108,7 +108,7 @@ public class Meetup extends JFrame {
 			ResultSet rs = pst.executeQuery();
 			if (!rs.isBeforeFirst()) {
 				doc.insertString(doc.getLength(), "The information for this user is unavailable.", null);
-		    } else if (rs.getString("Shared").equals("YES")) {
+		    } else if (rs.getString("Shared").equals("shared")) {
 				while (rs.next()) {
 					String name = rs.getString("Name");
 			        String gender = rs.getString("Gender");
@@ -119,31 +119,31 @@ public class Meetup extends JFrame {
 			        // Append data to the JTextPane with the appropriate style 
 			        doc.insertString(doc.getLength(), "\t" + name + " Profile\n\n", BoldStyle);
 	                
-					if (rs.getString("LiteraryPreferences")== null) {
+					if (preferences == null) {
 						doc.insertString(doc.getLength(), "Literary Preferences: None \n", orgStyle);
 					} else {
 						doc.insertString(doc.getLength(), "Literary Preferences: " + preferences + "\n", orgStyle);
 					}
 					
-					if (rs.getString("ReadingHabits")== null) {
+					if (habits == null) {
 						doc.insertString(doc.getLength(), "Reading Habits: None \n", greenStyle);
 					} else {
 						doc.insertString(doc.getLength(), "Reading Habits: " + habits + "\n", greenStyle);
 					}
 					
-					if (rs.getString("FavoriteBooks")== null) {
+					if (favbook == null) {
 						doc.insertString(doc.getLength(), "Favorite Books: None \n", orgStyle);
 					} else {
 						doc.insertString(doc.getLength(), "Favorite Books: " + favbook + "\n", orgStyle);
 					}
 								
-					if (rs.getString("Gender")== null) {
+					if (gender == null) {
 						doc.insertString(doc.getLength(), "Gender: None \n", greenStyle);
 					} else {
 						doc.insertString(doc.getLength(), "Gender: " + gender + "\n", greenStyle);
 					}
 					
-					if (rs.getString("Bio")== null) {
+					if (shortdes == null) {
 						doc.insertString(doc.getLength(), "Short description: \tNone \n", orgStyle);
 					} else {
 						doc.insertString(doc.getLength(), "Short description: " + shortdes + "\n", orgStyle);

@@ -1,0 +1,175 @@
+Test case 1: Faculty user can login successfully - PASSED
+Step:
+1. Launch Library System window
+--> Login screen displays
+2. Enter valid email (e.g.: allan.sherwood@yahoo.com) 
+3. Enter valid phone number (e.g.: 4088814551) 
+4. Click Login button
+5. Observe the result
+Observed result: User is navigated to Faculty screen
+
+Test case 2: Normal user can login successfully - PASSED
+Step:
+1. Launch Library System window
+--> Login screen displays
+2. Enter valid email (e.g.: john.doe@example.com) 
+3. Enter valid password (e.g.: 6698814551) 
+4. Click Login button
+5. Observe the result
+Observed result: User is navigated to Student screen
+
+Test case 3: User can create a new account successfully - PASSED
+Step:
+1. Launch Library System window
+2. Navigate to Create new account screen
+3. Enter a name (e.g.: enzo nguyen) 
+3. Enter an email (e.g.: enzo.sherwood@yahoo.com) 
+4. Enter valid password (e.g.: 4088814530)
+5. Click Register and observe the result
+Observed result: New account is created and the user is navigated to Login screen
+
+Test case 4: User cannot create a new account with an existed email - PASSED
+Step:
+1. Launch Library System window
+2. Navigate to Create new account screen
+3. Enter a name (e.g.: enzo nguyen) 
+3. Enter an existed email in the system (e.g.: john.doe@example.com) 
+4. Enter valid password (e.g.: 4088814530) 
+5. Click Register and observe the result
+Observed result: Warning window with message "Account is existed. Try Again." displays
+
+Test case 5: User can borrow the book - PASSED
+Step:
+1. Launch Library System window
+2. Login with valid email and password (john.doe@example.com / 6698814551)
+3. On Main window, click Borrow Book button
+--> All available books in the Library are shown
+4. Enter ISBN of the book which user want to borrow
+--> The detailed book is shown
+5. Enter the expected return date (e.g.: 06-15-2024)
+6. Click Borrow button
+Observed result: Window with message "The book has been successfully borrowed." displays and the book is borrowed successfully
+
+Test case 6: User cannot borrow the book that's already borrowed. - PASSED
+Step:
+1. Launch Library System window
+2. Login with valid email and password (john.doe@example.com / 6698814551)
+3. On Main window, click Borrow Book button
+--> All available books in the Library are shown
+4. Enter ISBN of the book that's already borrowed (e.g.: 202005)
+--> The detailed book is shown
+5. Enter the expected return date (e.g.: 06-15-2024)
+6. Click Borrow button
+Observed result: Window with message "The book has been borrowed by someone." displays
+
+Test case 7: User can return the book - PASSED
+Step:
+1. Launch Library System window
+2. Login with valid email and password (john.doe@example.com / 6698814551)
+3. On Main window, click Return Book button
+--> All books that are borrowed by the user are shown
+4. Enter ISBN of the book in the list 
+--> The detailed book is shown
+5. Click Return button
+Observed result: The window with the message "The book has been successfully returned." and the book is returned successfully.
+
+Test case 8: Search button is disabled when entering an alphabet characters - PASSED
+Step:
+1. Launch Library System window
+2. Login with valid email and password (allan.sherwood@yahoo.com / 4088814551)
+3. On Main window, click Manage Book button
+4. Enter an alphabet characters in Search field 
+5. Observer the result
+Observed result: Search button is disabled and red message "Non-numeric input detected!" displays. Message disappears if all nin-numeric are deleted.
+
+Test case 9: Faculty user can add a new book - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (allan.sherwood@yahoo.com / 4088814551)
+3. On Main window, click Manage Book button
+4. Enter ISBN, title, author, genre
+5. Click ADD button
+Observed result: The book is created successfully and is shown in All book List
+
+Test case 10: Faculty user cannot add an book with an existed ISBN - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (allan.sherwood@yahoo.com / 4088814551)
+3. On Main window, click Manage Book button
+4. Enter existed ISBN, title, author, genre
+5. Click ADD button
+Observed result: Window with message "Book is existed. Try Again." displays and the book is not added to the system.
+
+Test case 11: Faculty user can update the author of book - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (allan.sherwood@yahoo.com / 4088814551)
+3. On Main window, click Manage Book button
+4. Select any book from book list
+--> The detailed information is shown
+5. Update any information of the book
+6. Click UPDATE button
+Observed result: The book is updated successfully in the Book list
+
+Test case 12: Faculty user can delete the book - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (allan.sherwood@yahoo.com / 4088814551)
+3. On Main window, click Manage Book button
+4. Select any book from book list
+--> The detailed information is shown
+5. Update any information of the book
+6. Click DELETE button
+Observed result: The book is delete successfully from Book List
+
+Test case 13: Faculty user can delete the book - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (john.doe@example.com / 6698814551)
+3. On Main window, click User Profile button
+4. Enter all fields 
+5. Click SAVE button
+Observed result: The user profile is created successfully.
+
+Test case 14: User can shared his/her profile - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (john.doe@example.com / 6698814551)
+3. On Main window, click Meetup button
+4. Click Share Profile button
+Observed result: The user profile is shared successfully.
+
+Test case 15: User can unshared his/her profile - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (marry.watson@hotmail.com / 4078814551)
+3. On Main window, click Meetup button
+4. Click Unshare Profile button
+Observed result: The user profile is unshared successfully.
+
+Test case 16: User can view any shared profile - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (john.doe@example.com / 4078814551)
+3. On Main window, click Meetup button
+4. Click Profile icon of any user in User list 
+Observed result: The user profile is shown if it already is shared, otherwise it shows message "The information for this user is unavailable."
+
+Test case 17: User can see all feedback of a user in the system - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (marry.watson@hotmail.com / 4078814551)
+3. On Main window, click Meetup button
+4. Click Follow icon of any user in User list 
+Observed result: All feedbacks of the user are shown. In the case user do not give any feedback, it shows message "The information for this user is unavailable."
+
+Test case 18: User can chat with any user in system - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (marry.watson@hotmail.com / 4078814551)
+3. On Main window, click Meetup button
+4. Click Chat icon of any user in User list
+--> Chat window displays with correct user names
+5. Click Join chat button 
+Observed result: Both user can chat together successfully.
+
