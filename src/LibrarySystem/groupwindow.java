@@ -107,6 +107,7 @@ public class groupwindow extends JFrame {
 	        bufferedWriter.newLine(); // New line for separation
 	        bufferedWriter.flush(); // Ensure the message is sent
 	        
+	        System.out.println(messageToSend);
 	        // Clear the input text area after sending the message
 	        SendtextArea.setText("");
 	    } catch (IOException e) {
@@ -169,6 +170,7 @@ public class groupwindow extends JFrame {
 		username.setBounds(109, 47, 125, 23);
 		contentPane.add(username);
 		
+        
 		try {
 	        socket = new Socket("localhost", 9806); // Try to connect to the server
 	        bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -177,6 +179,7 @@ public class groupwindow extends JFrame {
 	        System.err.println("Error initializing connection: " + e.getMessage()); // Log the error
 	        closeEverytthing(socket, bufferedReader, bufferedWriter); // Clean up resources
 	    }
+		listenForMessage();
 	
 		DisplaytextArea = new JTextArea();
 		DisplaytextArea.setEditable(false);

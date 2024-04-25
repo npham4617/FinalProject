@@ -22,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -155,7 +157,6 @@ public class Groupchat extends JFrame {
 					for (User user : userList) {
 					    addUsertoPanel(user);
 				    }
-
 				}
 			}
 			pst.close();
@@ -198,51 +199,11 @@ public class Groupchat extends JFrame {
 		btnAddButton.setBounds(256, 97, 89, 23);
 		contentPane.add(btnAddButton);
 		
-
-	/*	JButton btnjoinButton = new JButton("JOIN CHAT");
-		btnjoinButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				List<Window> windows = new ArrayList<>();
-		        	        
-		        // Create and configure windows for each user
-				int numUsers = Math.min(5, userList.size()); 
-		        for (int i = 0; i < numUsers; i++) {
-		        	String iduser = userList.get(i).getId();
-		        	groupwindow window = new groupwindow(Long.parseLong(iduser));
-		            window.setUndecorated(true);
-		            window.setLocationRelativeTo(null);
-		            windows.add(window);
-		        }   
-		        
-		        // Set otherWindow for each window
-		        for (int i = 0; i < numUsers; i++) {
-		            Window currentWindow = windows.get(i);
-		            for (int j = 0; j < numUsers; j++) {
-		            	Window otherWindow = windows.get(j);
-		                if (i != j) {
-		                    currentWindow.setOtherWindow(otherWindow);
-		                    otherWindow.setOtherWindow(currentWindow);
-		                }
-		            }
-		        }
-		   
-		        // Make all windows visible
-		        for (Window window : windows) {
-		            window.setVisible(true);
-		        }
-		        
-		        // Close the current window
-		        dispose();
-			}
-		});
-		btnjoinButton.setBounds(191, 357, 118, 23);
-		contentPane.add(btnjoinButton);
-*/
 		JButton btnjoinButton = new JButton("JOIN CHAT");
 		btnjoinButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				List<groupwindow> windows = new ArrayList<>();
-	        
+				
 		        // Create and configure windows for each user
 				int numUsers = Math.min(5, userList.size()); 
 		        for (int i = 0; i < numUsers; i++) {
@@ -264,10 +225,7 @@ public class Groupchat extends JFrame {
 		});
 		btnjoinButton.setBounds(191, 357, 118, 23);
 		contentPane.add(btnjoinButton);
-		
-		
-		
-		
+	
 		JLabel lblTitleLabel = new JLabel("GROUP CHAT");
 		lblTitleLabel.setBounds(138, 11, 207, 30);
 		contentPane.add(lblTitleLabel);
@@ -292,11 +250,7 @@ public class Groupchat extends JFrame {
 		try {	
 			query = "select * from User where ID_User = ? ";
 			pst = conn.prepareStatement(query);
-			//pst.setLong(1, userid); 
-			
-			String na = "2020";
-			pst.setLong(1, Long.parseLong(na)); 
-			
+			pst.setLong(1, userid); 
 			ResultSet rs = pst.executeQuery();
 			while (rs.next()) {
 				String name = rs.getString("Name");
@@ -319,7 +273,6 @@ public class Groupchat extends JFrame {
 		lblImageLabel.setBounds(0, -94, 543, 550);
 		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/pink.png")));
 		contentPane.add(lblImageLabel);
-		
 
 	}
 }
