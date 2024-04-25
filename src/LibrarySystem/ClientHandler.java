@@ -14,8 +14,6 @@ public class ClientHandler implements Runnable{
 	private Socket socket;
 	private BufferedReader bufferedReader;
 	private BufferedWriter bufferedWriter;
-	private String clientUsername;
-	
 	
 	public ClientHandler(Socket socket) {
 		try {
@@ -25,10 +23,7 @@ public class ClientHandler implements Runnable{
 	        }
 			this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			this.clientUsername = bufferedReader.readLine();
 			clientHandlers.add(this);
-			broadcastMessage("SERVER: " + clientUsername + " has entered the chat!");
-		
 		} catch(IOException e) {
 			closeEverytthing(socket, bufferedReader, bufferedWriter);
 		}
@@ -36,12 +31,10 @@ public class ClientHandler implements Runnable{
 	
 	@Override
 	public void run() {
-		String messageFromClient;
-		
 		while(socket.isConnected()) {
 			try {
-				messageFromClient = bufferedReader.readLine();
-				broadcastMessage(messageFromClient);			
+				String messageFromClient = bufferedReader.readLine();
+				broadcastMessage(messageFromClient);
 			} catch(IOException e) {
 				closeEverytthing(socket, bufferedReader, bufferedWriter);
 				break;
@@ -49,24 +42,20 @@ public class ClientHandler implements Runnable{
 		}
 	}
 	
-	public synchronized void broadcastMessage(String messageToSend) {
-		for(ClientHandler clientHandler: clientHandlers) {
-			try {
-				if(!clientHandler.clientUsername.equals(clientUsername)) {
-					clientHandler.bufferedWriter.write(messageToSend);
-					clientHandler.bufferedWriter.newLine();
-					clientHandler.bufferedWriter.flush();
-				}
-			}catch(IOException e) {
-				closeEverytthing(socket, bufferedReader, bufferedWriter);
-				
-			}
-		}
-	}
+	public synchronized static void broadcastMessage(String messageToSend) {
+        for (ClientHandler clientHandler : clientHandlers) {
+        	try {
+        		clientHandler.bufferedWriter.write(messageToSend);
+        		clientHandler.bufferedWriter.newLine();
+        		clientHandler.bufferedWriter.flush();
+        	} catch(IOException e) {
+        		e.printStackTrace();
+        	}
+        }
+    }
 	
 	public void removeClientHandler() {
 		clientHandlers.remove(this);
-		broadcastMessage("SERVER: " + clientUsername + " has left the chat!");
 	}
 	
 	public void closeEverytthing(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {

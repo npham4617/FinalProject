@@ -118,6 +118,7 @@ public class Groupchat extends JFrame {
 		String query;
 		String email = null;
 		String name = null;
+		String id = null;
 		boolean userExists = false;
 		PreparedStatement pst;
 		try {	
@@ -130,6 +131,7 @@ public class Groupchat extends JFrame {
 			while (rs.next()) {
 				name = rs.getString("Name");
 				email = rs.getString("Email");
+				id = rs.getString("ID_User");
 				count = count + 1;
 			}
 			if (count < 1) {
@@ -145,7 +147,7 @@ public class Groupchat extends JFrame {
 				}	
 				if (!userExists) {
 					if (userList.size() < 5) {
-		                userList.add(new User(name, email));
+		                userList.add(new User(name, email, id));
 		            } else {
 		                JOptionPane.showMessageDialog(null, "Maximum 5 users allowed.", "ADD GROUP", JOptionPane.INFORMATION_MESSAGE);
 		            }
@@ -205,8 +207,8 @@ public class Groupchat extends JFrame {
 		        // Create and configure windows for each user
 				int numUsers = Math.min(5, userList.size()); 
 		        for (int i = 0; i < numUsers; i++) {
-		            Window window = new Window();
-		            window.username.setText(userList.get(i).getName());
+		        	String iduser = userList.get(i).getId();
+		        	groupwindow window = new groupwindow(Long.parseLong(iduser));
 		            window.setUndecorated(true);
 		            window.setLocationRelativeTo(null);
 		            windows.add(window);
@@ -244,8 +246,8 @@ public class Groupchat extends JFrame {
 		        // Create and configure windows for each user
 				int numUsers = Math.min(5, userList.size()); 
 		        for (int i = 0; i < numUsers; i++) {
-		        	groupwindow window = new groupwindow();
-		            window.username.setText(userList.get(i).getName());
+		        	String iduser = userList.get(i).getId();
+		        	groupwindow window = new groupwindow(Long.parseLong(iduser));
 		            window.setUndecorated(true);
 		            window.setLocationRelativeTo(null);
 		            windows.add(window);
@@ -299,7 +301,8 @@ public class Groupchat extends JFrame {
 			while (rs.next()) {
 				String name = rs.getString("Name");
 				String email = rs.getString("Email");
-				userList.add(new User(name, email));    
+				String id_user = rs.getString("ID_User");
+				userList.add(new User(name, email, id_user));    
 			}  
 			for(User user:userList) {
 				addUsertoPanel(user);
@@ -324,10 +327,12 @@ public class Groupchat extends JFrame {
 class User {
     private String name;
     private String email;
+    private String userid;
 
-    public User(String name, String email) {
+    public User(String name, String email, String userid) {
         this.name = name;
         this.email = email;
+        this.userid=userid;
     }
 
     public String getName() {
@@ -336,5 +341,9 @@ class User {
 
     public String getEmail() {
         return email;
+    }
+    
+    public String getId() {
+        return userid;
     }
 }

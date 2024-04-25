@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,14 +34,14 @@ public class groupwindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	public JTextArea SendtextArea;
-	public JLabel username;
+	private JLabel username;
 	public JButton btnSendButton;
 	public Window otherWindow;
 	private JButton btnCloseButton;
 	private JLabel lbltitlelabel;
 	private int initialX = 0;
     private int initialY = 0;
-
+    private static Connection conn = null;
     public JTextArea DisplaytextArea;  
    
 	private Socket socket;
@@ -52,7 +55,7 @@ public class groupwindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					groupwindow frame = new groupwindow();
+					groupwindow frame = new groupwindow(0L);
 					frame.setVisible(true);
 					frame.listenForMessage();
 					frame.sendMessage();
@@ -68,22 +71,21 @@ public class groupwindow extends JFrame {
 	 */
 	
 	public void listenForMessage() {
-		new Thread(new Runnable() {
-			public void run() {
+		new Thread(() -> {
 				String msgFromGroupChat = null;
+				
 				while (socket.isConnected()) {
 					try {
 						msgFromGroupChat = bufferedReader.readLine();
 						final String messageToAppend = msgFromGroupChat;
 						SwingUtilities.invokeLater(() -> {
-					        DisplaytextArea.append(messageToAppend + "\n");
-					    });
+		                    DisplaytextArea.append(messageToAppend + "\n"); // Ensure thread-safe UI updates
+		                });
 					}catch(IOException e) {
 						closeEverytthing(socket, bufferedReader, bufferedWriter);
 						break;
 					}
 				}
-			}
 		}).start();
 	}
 	
@@ -98,8 +100,8 @@ public class groupwindow extends JFrame {
 	            return; // Exit if there's an error initializing the socket
 	        }
 	    }
-		
-		try {
+
+	    try {
 	        String messageToSend = username.getText() + ": " + SendtextArea.getText().trim(); // Prepare message
 	        bufferedWriter.write(messageToSend); // Write to the output stream
 	        bufferedWriter.newLine(); // New line for separation
@@ -110,19 +112,28 @@ public class groupwindow extends JFrame {
 	    } catch (IOException e) {
 	        closeEverytthing(socket, bufferedReader, bufferedWriter);
 	    }
- 
 	}
 
-	public groupwindow() {
-		try {
-			socket = new Socket("localhost", 9806);
-			this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		} catch(IOException e) {
-			closeEverytthing(socket, bufferedReader, bufferedWriter);
-		}
+	public groupwindow(long userid) {
+		conn = SqliteConnect.connect();
 
-	 	setResizable(false);
+		// Show user's name
+		String name = null;
+		try {
+			String query = "select * from User where ID_User = ?";
+			PreparedStatement pst = conn.prepareStatement(query);
+			pst.setLong(1, userid);
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				name = rs.getString("Name");
+			}	
+			pst.close();							
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		setResizable(false);
 		setTitle("Chat Window");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 455, 437);
@@ -146,8 +157,29 @@ public class groupwindow extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+
+		JLabel lblNewLabel = new JLabel("Chat window for ");
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setBounds(10, 47, 96, 23);
+		contentPane.add(lblNewLabel);
 		
+		username = new JLabel("");
+		username.setText(name);
+		username.setForeground(new Color(255, 255, 255));
+		username.setBounds(109, 47, 125, 23);
+		contentPane.add(username);
+		
+		try {
+	        socket = new Socket("localhost", 9806); // Try to connect to the server
+	        bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+	        bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	    } catch (IOException e) { // Catch connection issues
+	        System.err.println("Error initializing connection: " + e.getMessage()); // Log the error
+	        closeEverytthing(socket, bufferedReader, bufferedWriter); // Clean up resources
+	    }
+	
 		DisplaytextArea = new JTextArea();
+		DisplaytextArea.setEditable(false);
 		DisplaytextArea.setBounds(10, 83, 419, 239);
 		contentPane.add(DisplaytextArea);
 		
@@ -164,16 +196,6 @@ public class groupwindow extends JFrame {
 		
 		btnSendButton.setBounds(333, 338, 89, 38);
 		contentPane.add(btnSendButton);
-		
-		JLabel lblNewLabel = new JLabel("Chat window for ");
-		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setBounds(10, 47, 96, 23);
-		contentPane.add(lblNewLabel);
-		
-		username = new JLabel("");
-		username.setForeground(new Color(255, 255, 255));
-		username.setBounds(109, 47, 125, 23);
-		contentPane.add(username);
 		
 		JButton btnClearButton = new JButton("CLEAR");
 		btnClearButton.addActionListener(new ActionListener() {
