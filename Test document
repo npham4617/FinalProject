@@ -135,7 +135,7 @@ Test case 14: User can shared his/her profile - PASSED
 Step:
 1. Launch Library System program
 2. Login with valid email and password (john.doe@example.com / 6698814551)
-3. On Main window, click Meetup button
+3. On Main window, click Gathering button
 4. Click Share Profile button
 Observed result: The user profile is shared successfully.
 
@@ -143,7 +143,7 @@ Test case 15: User can unshared his/her profile - PASSED
 Step:
 1. Launch Library System program
 2. Login with valid email and password (marry.watson@hotmail.com / 4078814551)
-3. On Main window, click Meetup button
+3. On Main window, click Gathering button
 4. Click Unshare Profile button
 Observed result: The user profile is unshared successfully.
 
@@ -151,7 +151,7 @@ Test case 16: User can view any shared profile - PASSED
 Step:
 1. Launch Library System program
 2. Login with valid email and password (john.doe@example.com / 4078814551)
-3. On Main window, click Meetup button
+3. On Main window, click Gathering button
 4. Click Profile icon of any user in User list 
 Observed result: The user profile is shown if it already is shared, otherwise it shows message "The information for this user is unavailable."
 
@@ -159,7 +159,7 @@ Test case 17: User can see all feedback of a user in the system - PASSED
 Step:
 1. Launch Library System program
 2. Login with valid email and password (marry.watson@hotmail.com / 4078814551)
-3. On Main window, click Meetup button
+3. On Main window, click Gathering button
 4. Click Follow icon of any user in User list 
 Observed result: All feedbacks of the user are shown. In the case user do not give any feedback, it shows message "The information for this user is unavailable."
 
@@ -167,9 +167,39 @@ Test case 18: User can chat with any user in system - PASSED
 Step:
 1. Launch Library System program
 2. Login with valid email and password (marry.watson@hotmail.com / 4078814551)
-3. On Main window, click Meetup button
+3. On Main window, click Gathering button
 4. Click Chat icon of any user in User list
 --> Chat window displays with correct user names
 5. Click Join chat button 
 Observed result: Both user can chat together successfully.
 
+Test case 19: User can create a group chat with many users in system - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (marry.watson@hotmail.com / 4078814551)
+3. On Main window, click Gathering button
+4. Click Create Group button
+--> Group Chat window displays 
+5. Add some users in the system
+6. Click Join chat button 
+Observed result: All added users can chat to each other successfully.
+
+Test case 20: User cannot create a group chat with more than 5 users - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (marry.watson@hotmail.com / 4078814551)
+3. On Main window, click Gathering button
+4. Click Create Group button
+--> Group Chat window displays 
+5. Add more than 5 users in the system
+Observed result: Warning message "Maximum 5 users allowed." displays.
+
+Test case 21: User can provide any feedback for any book - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (marry.watson@hotmail.com / 4078814551)
+3. On Main window, click Discussion button
+4. Enter any valid ISBN and click Search button
+--> All feedback for the selected book are shown
+5. Provide your feedback and click Submit button
+Observed result: The feedback is submitted successfully.

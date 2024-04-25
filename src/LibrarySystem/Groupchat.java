@@ -2,6 +2,7 @@ package LibrarySystem;
 
 
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -22,8 +23,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -198,12 +197,11 @@ public class Groupchat extends JFrame {
 		});
 		btnAddButton.setBounds(256, 97, 89, 23);
 		contentPane.add(btnAddButton);
-		
+
 		JButton btnjoinButton = new JButton("JOIN CHAT");
 		btnjoinButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				List<groupwindow> windows = new ArrayList<>();
-				
 		        // Create and configure windows for each user
 				int numUsers = Math.min(5, userList.size()); 
 		        for (int i = 0; i < numUsers; i++) {
@@ -227,11 +225,13 @@ public class Groupchat extends JFrame {
 		contentPane.add(btnjoinButton);
 	
 		JLabel lblTitleLabel = new JLabel("GROUP CHAT");
+		lblTitleLabel.setForeground(new Color(255, 255, 255));
 		lblTitleLabel.setBounds(138, 11, 207, 30);
 		contentPane.add(lblTitleLabel);
 		lblTitleLabel.setFont(new Font("Rockwell", Font.PLAIN, 25));
 		
 		JLabel lblEmailLabel = new JLabel("Enter your name or email address (maximum 5 people):");
+		lblEmailLabel.setForeground(new Color(255, 255, 255));
 		lblEmailLabel.setFont(new Font("Tahoma", Font.ITALIC, 11));
 		lblEmailLabel.setBounds(51, 65, 316, 23);
 		contentPane.add(lblEmailLabel);
@@ -288,7 +288,11 @@ class User {
         this.userid=userid;
     }
 
-    public String getName() {
+    public User(int int1, String string) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getName() {
         return name;
     }
 

@@ -387,7 +387,7 @@ public class Discussion extends JFrame {
 		contentPane.add(lblWelcome);
 		
 		lblbookname = new JLabel("");
-		lblbookname.setForeground(new Color(175, 238, 238));
+		lblbookname.setForeground(new Color(0, 0, 160));
 		lblbookname.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblbookname.setBounds(307, 102, 316, 23);
 		contentPane.add(lblbookname);

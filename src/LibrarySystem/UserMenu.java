@@ -131,10 +131,8 @@ public class UserMenu extends JFrame {
 		});
 		btnDiscussButton.setBounds(20, 263, 131, 23);
 		contentPane.add(btnDiscussButton);
-
-		
 		 
-		JButton btnMeetupButton = new JButton("MEETUP");
+		JButton btnMeetupButton = new JButton("GATHERING");
 		btnMeetupButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Meetup met = new Meetup(userid);
@@ -147,12 +145,18 @@ public class UserMenu extends JFrame {
 		contentPane.add(btnMeetupButton);
 		setContentPane(contentPane);
 		
+		JButton btnNewButton = new JButton("EVENTS");
+		btnNewButton.setBounds(20, 363, 131, 23);
+		contentPane.add(btnNewButton);
+		
 		// Set User page layout
 		JLabel lblImageLabel = new JLabel("");
 		lblImageLabel = new JLabel("");
 		lblImageLabel.setBounds(0, 10, 595, 550);
 		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/Library.png")));
 		contentPane.add(lblImageLabel);	
+		
+
 		
 	}
 

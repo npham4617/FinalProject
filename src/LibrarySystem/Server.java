@@ -46,5 +46,4 @@ public static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
 		server.startServer();
 	}
 
-	
 }

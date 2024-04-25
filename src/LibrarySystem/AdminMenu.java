@@ -154,7 +154,7 @@ public class AdminMenu extends JFrame {
 		contentPane.add(btnDiscussButton);
 		
 		 
-		JButton btnMeetupButton = new JButton("MEETUP");
+		JButton btnMeetupButton = new JButton("GATHERING");
 		btnMeetupButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Meetup met = new Meetup(userid);
@@ -166,14 +166,19 @@ public class AdminMenu extends JFrame {
 		btnMeetupButton.setBounds(20, 353, 131, 23);
 		contentPane.add(btnMeetupButton);
 	
+		JButton btnEventButton = new JButton("EVENTS");
+		btnEventButton.setBounds(20, 403, 131, 23);
+		contentPane.add(btnEventButton);
 		
 		// Set Admin page layout
 		JLabel lblImageLabel = new JLabel("");
 		lblImageLabel = new JLabel("");
 		lblImageLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblImageLabel.setBounds(0, 10, 595, 550);
+		lblImageLabel.setBounds(0, 10, 585, 550);
 		lblImageLabel.setIcon(new ImageIcon(Library.class.getResource("/Image/Library.png")));
 		contentPane.add(lblImageLabel);	
+		
+
 
 
 
