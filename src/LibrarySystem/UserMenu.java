@@ -146,6 +146,14 @@ public class UserMenu extends JFrame {
 		setContentPane(contentPane);
 		
 		JButton btnNewButton = new JButton("EVENTS");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Events event = new Events(userid);
+				event.setVisible(true);
+				event.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
 		btnNewButton.setBounds(20, 363, 131, 23);
 		contentPane.add(btnNewButton);
 		

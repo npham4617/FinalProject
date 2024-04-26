@@ -203,3 +203,12 @@ Step:
 --> All feedback for the selected book are shown
 5. Provide your feedback and click Submit button
 Observed result: The feedback is submitted successfully.
+
+Test case 22: User can register to join any event - PASSED
+Step:
+1. Launch Library System program
+2. Login with valid email and password (marry.watson@hotmail.com / 4078814551)
+3. On Main window, click Events button
+4. Select any events
+5. Click Register button
+Observed result: The user can join the event successfully.

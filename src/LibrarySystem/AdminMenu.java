@@ -167,6 +167,14 @@ public class AdminMenu extends JFrame {
 		contentPane.add(btnMeetupButton);
 	
 		JButton btnEventButton = new JButton("EVENTS");
+		btnEventButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Events event = new Events(userid);
+				event.setVisible(true);
+				event.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
 		btnEventButton.setBounds(20, 403, 131, 23);
 		contentPane.add(btnEventButton);
 		

@@ -316,6 +316,7 @@ public class Events extends JFrame {
 						query = "Update Event set Participants = '"+ newparticipant +"' where EventName = '"+EventtextField.getText()+"'";
 						pst = conn.prepareStatement(query);
 						pst.execute();
+						JOptionPane.showMessageDialog(null, "You register successfully.", "EVENTS", JOptionPane.INFORMATION_MESSAGE);
 					} else {
 						JOptionPane.showMessageDialog(null, "You already exists in the participant list.", "EVENTS", JOptionPane.INFORMATION_MESSAGE);
 					}
@@ -381,8 +382,7 @@ public class Events extends JFrame {
 		LocationtextField.setBounds(400, 198, 235, 20);
 		contentPane.add(LocationtextField);
 		LocationtextField.setColumns(10);
-		
-		
+			
 		JLabel lblNewLabel = new JLabel("~~~~ Discover Upcoming Book Events ~~~~");
 		lblNewLabel.setFont(new Font("Tahoma", Font.ITALIC, 12));
 		lblNewLabel.setBounds(10, 76, 317, 42);
