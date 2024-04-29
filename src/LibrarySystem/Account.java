@@ -27,7 +27,6 @@ public class Account extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static Connection conn = null;
 
-
 	private JPanel contentPane;
 	private JPanel panelLogin;
 	private JPanel panelRegister;

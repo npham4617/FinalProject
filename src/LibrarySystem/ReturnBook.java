@@ -424,7 +424,7 @@ public class ReturnBook extends JFrame {
 		contentPane.add(ExpectedDateField);
 		ExpectedDateField.setColumns(10);
 			
-		JButton btnReturnButton = new JButton("RETURN");
+		JButton btnReturnButton = new JButton("RETURN BOOK");
 		btnReturnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
@@ -461,7 +461,7 @@ public class ReturnBook extends JFrame {
 				}
 			}
 		});
-		btnReturnButton.setBounds(243, 344, 89, 23);
+		btnReturnButton.setBounds(192, 344, 140, 23);
 		contentPane.add(btnReturnButton);
 		
 		JButton btnBackButton = new JButton("MAIN MENU");
@@ -494,7 +494,7 @@ public class ReturnBook extends JFrame {
 				}
 			}
 		});
-		btnBackButton.setBounds(346, 344, 110, 23);
+		btnBackButton.setBounds(361, 344, 140, 23);
 		contentPane.add(btnBackButton);
 
 		

@@ -317,6 +317,10 @@ public class Events extends JFrame {
 						pst = conn.prepareStatement(query);
 						pst.execute();
 						JOptionPane.showMessageDialog(null, "You register successfully.", "EVENTS", JOptionPane.INFORMATION_MESSAGE);
+						ArrayList<String> participantIDs = getParticipantIDs(newparticipant);
+			            // Retrieve user information based on the IDs
+			            ArrayList<User> users = getUsersByIDs(participantIDs);
+			            displayUsers(users);
 					} else {
 						JOptionPane.showMessageDialog(null, "You already exists in the participant list.", "EVENTS", JOptionPane.INFORMATION_MESSAGE);
 					}
