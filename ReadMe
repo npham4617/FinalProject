@@ -1,0 +1,56 @@
+Project Title: BiblioConnect - Integrated Library and Literary Social Network
+
+Description:
+biblioConnect System is an integrated platform designed to provide users with access to library resources while also facilitating social interactions among patrons. The system aims to create a vibrant community where users can engage with each other, share knowledge, and participate in various social activities related to reading and learning.​Installation Instructions:
+
+1. Clone the project repository to your local machine:
+   git clone https://github.com/your-username/biblioconnect.git
+
+2. Import the project into your preferred Java IDE (e.g., Eclipse, IntelliJ IDEA).
+   Ensure that you have Java Development Kit (JDK) installed on your system.
+
+3. Set up the database:
+   - Follow the instructions in the Week 8 Slides to install and connect to SQLite.
+   - Create a database named 'biblioconnect' and execute the provided SQL script to set up the required tables.
+
+Usage:
+
+1. Run the application in your Java IDE.
+2. Navigate through different functionalities:
+   - Manage books, patrons, and transactions in the library management section.
+   - Interact with other users, join groups, and participate in discussions in the social networking section.
+3. Use the menu options provided to perform desired actions.
+4. Explore the various features of BiblioConnect.
+
+Folder Structure:
+.settings
+java
+src
+.classpath
+.gitignore
+.project
+LibraryDatabase.db
+Test document
+jcalendar-1.4.jar
+jgoodies-common-1.2.0.jar
+jgoodies-looks-2.4.1.jar
+junit-4.6.jar
+
+
+Dependencies:
+- Java Development Kit (JDK)
+- SQLite database
+- JDBC driver for SQLite
+
+How to Contribute:
+
+We welcome contributions to enhance BiblioConnect and make it more user-friendly. If you're interested in contributing, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your changes.
+3. Make your modifications and commit them with descriptive commit messages.
+4. Push your changes to your forked repository.
+5. Submit a pull request to the main repository.
+
+Credits:
+This project was developed by Heritier Kimbi , Ngoc Ngan Pham, Scott Tanaka, Scott Taylor and Edysson Termonfils  as part of the Final project cs401
